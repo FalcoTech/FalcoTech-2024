@@ -4,6 +4,11 @@
 
 package frc.robot.subsystems.Swerve;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveBaseConstants;
@@ -75,6 +81,29 @@ public class SwerveSubsystem extends SubsystemBase {
         System.out.println(e);
       }
     }).start();
+
+    //Configure autobuilder last
+    AutoBuilder.configureHolonomic(
+      this::getPose2d, //get pose
+      this::resetPose, //reset pose
+      this::getChassisSpeeds, //chassisspeeds supplier
+      this::driveWithChassisSpeeds, //chassisspeeds consumer 
+      new HolonomicPathFollowerConfig(
+        new PIDConstants(3.0, 0.0, 0.0), // translation PID
+        new PIDConstants(3.0, 0.0, 0.0), // rotation PID
+        DriveConstants.kMaxSpeedMetersPerSecond, //max module speed m/s
+        1.0, //drivebase radius
+        new ReplanningConfig()
+      ), 
+      () -> {
+        //mirror auto path for red side
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()){
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      }, 
+      this); //swewrve subsystem
   }
 
   public double getGyroHeading(){

@@ -5,14 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.SwerveJoystickCommand;
-import frc.robot.commands.SwerveLockWheels;
+import frc.robot.commands.Swerve.SwerveJoystickCommand;
+import frc.robot.commands.Swerve.SwerveLockWheels;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -47,7 +47,11 @@ public class RobotContainer {
       () -> Pilot.getR2Axis(),
       () -> !Pilot.getR1Button()));
     
-
+      // Warning:
+      // Named commands must be registered before the creation of any PathPlanner Autos or Paths. 
+      // It is recommended to do this in RobotContainer, after subsystem initialization, but before the creation 
+      // of any other commands.
+    configureNamedCommands();
     configureBindings();
     configureSmartDashboard();
   }
@@ -59,12 +63,17 @@ public class RobotContainer {
     
     // new Trigger(() -> Pilot.getYButton()).whileTrue(new SwerveXStanceCommand(m_swerveSubsystem)); //XBOX CONTROLLER
   }
-  
+
+  private void configureNamedCommands(){
+    NamedCommands.registerCommand("Lock Wheels", new SwerveLockWheels(m_swerveSubsystem));
+  }
+
   private void configureSmartDashboard(){
-    m_autoChooser.setDefaultOption("No Auto Selected", new InstantCommand());
+    m_autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Chooser", m_autoChooser);
   }
+
 
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
