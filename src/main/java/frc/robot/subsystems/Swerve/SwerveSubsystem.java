@@ -97,12 +97,12 @@ public class SwerveSubsystem extends SubsystemBase {
       pose);
   }
 
-  public void setModuleStates(SwerveModuleState[] desiredStates){
+  public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreSpeedCheck){
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
-    frontLeftModule.setDesiredState(desiredStates[0]);
-    frontRightModule.setDesiredState(desiredStates[1]);
-    backLeftModule.setDesiredState(desiredStates[2]);
-    backRightModule.setDesiredState(desiredStates[3]);
+    frontLeftModule.setDesiredState(desiredStates[0], ignoreSpeedCheck);
+    frontRightModule.setDesiredState(desiredStates[1], ignoreSpeedCheck);
+    backLeftModule.setDesiredState(desiredStates[2], ignoreSpeedCheck);
+    backRightModule.setDesiredState(desiredStates[3], ignoreSpeedCheck);
   }
 
   public void driveRobotRelative(double xSpdFB, double ySpdLR, double rotSpd){
@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase {
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded);
 
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(moduleStates);
+    setModuleStates(moduleStates, false);
   }
   public void driveWithChassisSpeeds(ChassisSpeeds speeds){
     driveRobotRelative(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);

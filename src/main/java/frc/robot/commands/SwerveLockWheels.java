@@ -48,7 +48,7 @@ public class SwerveLockWheels extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_swerveSubsystem.setModuleStates(XStanceStates);
+      m_swerveSubsystem.setModuleStates(XStanceStates, true);
   }
 
   // Called once the command ends or is interrupted.

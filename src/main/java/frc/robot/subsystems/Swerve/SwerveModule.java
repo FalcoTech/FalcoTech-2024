@@ -98,8 +98,8 @@ public class SwerveModule extends SubsystemBase {
   public SwerveModulePosition getSwerveModulePosition(){
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getAbsoluteEncoderPosition()));
   }
-  public void setDesiredState(SwerveModuleState state){
-    if (Math.abs(state.speedMetersPerSecond) < 0.01){
+  public void setDesiredState(SwerveModuleState state, boolean ignoreSpeedCheck){
+    if (Math.abs(state.speedMetersPerSecond) < 0.01 && !ignoreSpeedCheck){
       stopMotors();
       return;
     }
@@ -110,19 +110,7 @@ public class SwerveModule extends SubsystemBase {
 
     SmartDashboard.putString(moduleName + " state", state.toString());    
   }
-  
-  public void setDesiredState(SwerveModuleState state, boolean ignoreSpeedCheck){
-    if (ignoreSpeedCheck){
-      state = SwerveModuleState.optimize(state, getSwerveModuleState().angle);
 
-      driveMotor.set(state.speedMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond);
-      turnMotor.set(turnPID.calculate(getAbsoluteEncoderPosition(), state.angle.getRadians()));
-
-      SmartDashboard.putString(moduleName + " state", state.toString()); 
-    } else {
-      setDesiredState(state);
-    }
-  }
 
 
   public void brakeMotors(){
