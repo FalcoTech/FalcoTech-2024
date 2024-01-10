@@ -5,10 +5,23 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.SwerveJoystickCommand;
+import frc.robot.commands.SwerveLockWheels;
+import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
+
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -20,44 +33,45 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  private final Vision m_vision = new Vision();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // private final XboxController Pilot = new XboxController(0);
+  public final PS4Controller Pilot = new PS4Controller(OperatorConstants.kPilotPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+     
   public RobotContainer() {
-    // Configure the trigger bindings
+    m_swerveSubsystem.setDefaultCommand(new SwerveJoystickCommand( //PS4 CONTROLLER
+      m_swerveSubsystem, 
+      () -> -Pilot.getLeftY(), //-Pilot.getLeftY()
+      () -> Pilot.getLeftX(),
+      () -> -Pilot.getRightX(),
+      () -> Pilot.getL2Axis(),
+      () -> Pilot.getR2Axis(),
+      () -> !Pilot.getR1Button()));
+    
+
     configureBindings();
+    configureSmartDashboard();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    
+    // new Trigger(() -> Pilot.getYButton()).whileTrue(new SwerveXStanceCommand(m_swerveSubsystem)); //XBOX CONTROLLER
+  }
+  
+  private void configureSmartDashboard(){
+    m_autoChooser.setDefaultOption("No Auto Selected", new InstantCommand());
+
+    SmartDashboard.putData("Auto Chooser", m_autoChooser);
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return m_autoChooser.getSelected();
   }
 }
