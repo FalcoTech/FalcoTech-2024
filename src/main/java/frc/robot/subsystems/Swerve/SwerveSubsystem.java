@@ -87,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
       this::getPose2d, //get pose
       this::resetPose, //reset pose
       this::getChassisSpeeds, //chassisspeeds supplier
-      this::driveWithChassisSpeeds, //chassisspeeds consumer 
+      this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer 
       new HolonomicPathFollowerConfig(
         new PIDConstants(3.0, 0.0, 0.0), // translation PID
         new PIDConstants(3.0, 0.0, 0.0), // rotation PID
@@ -134,7 +134,7 @@ public class SwerveSubsystem extends SubsystemBase {
     backRightModule.setDesiredState(desiredStates[3], ignoreSpeedCheck);
   }
 
-  public void driveRobotRelative(double xSpdFB, double ySpdLR, double rotSpd){
+  public void swerveDriveRobotRelative(double xSpdFB, double ySpdLR, double rotSpd){
     double xSpeedCommanded = xSpdFB * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedCommanded = ySpdLR * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotSpeedCommanded = rotSpd * DriveConstants.kMaxAngularSpeedRadiansPerSecond;
@@ -144,8 +144,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, false);
   }
-  public void driveWithChassisSpeeds(ChassisSpeeds speeds){
-    driveRobotRelative(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+  public void swerveDriveChassisSpeedsConsumer(ChassisSpeeds speeds){
+    swerveDriveRobotRelative(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
   }
 
   public void brakeModules(){
