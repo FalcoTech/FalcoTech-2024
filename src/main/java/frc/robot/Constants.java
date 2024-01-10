@@ -86,7 +86,7 @@ public final class Constants {
     public static final boolean kBackLeftDriveMotorReversed = true;
     public static final boolean kBackLeftTurnMotorReversed = false;
     public static final int kBackLeftAbsoluteEncoderID = 2;
-    public static final double kBackLeftAbsoluteEncoderOffsetRadians = -3.066421397030354; //enter degrees
+    public static final double kBackLeftAbsoluteEncoderOffsetRadians = -3.066421397030354; 
     public static final boolean kBackLeftAbsoluteEncoderReversed = false;
 
     public static final int kBackRightDriveMotorID = 16;
@@ -94,7 +94,7 @@ public final class Constants {
     public static final boolean kBackRightDriveMotorReversed = false;
     public static final boolean kBackRightTurnMotorReversed = false;
     public static final int kBackRightAbsoluteEncoderID = 3;
-    public static final double kBackRightAbsoluteEncoderOffsetRadians = -1.58306497335434; //enter degrees
+    public static final double kBackRightAbsoluteEncoderOffsetRadians = -1.58306497335434; 
     public static final boolean kBackRightAbsoluteEncoderReversed = false;
   }
 }
