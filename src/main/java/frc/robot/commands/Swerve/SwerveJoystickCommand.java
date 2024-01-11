@@ -55,8 +55,7 @@ public class SwerveJoystickCommand extends Command {
     double ySpeed = ySpdFunction.get() * DriveConstants.kTeleopDriveSpeedScale;
     double leftTriggerRot = leftTriggerFunction.get() * DriveConstants.kTeleopDriveTriggerSpeedScale;
     double rightTriggerRot = rightTriggerFunction.get() * DriveConstants.kTeleopDriveTriggerSpeedScale;
-    double rotSpeed = (rotSpdFunction.get() * DriveConstants.kTeleopDriveSpeedScale) + (leftTriggerRot - rightTriggerRot);
-    
+    double rotSpeed = Math.min((rotSpdFunction.get() * DriveConstants.kTeleopDriveSpeedScale) + (leftTriggerRot - rightTriggerRot), 1.0);
 
 
     xSpeed = Math.abs(xSpeed) > OperatorConstants.kPilotDeadband ? xSpeed : 0;

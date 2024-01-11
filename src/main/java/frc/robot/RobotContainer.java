@@ -61,7 +61,7 @@ public class RobotContainer {
     new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
 
     
-    // new Trigger(() -> Pilot.getYButton()).whileTrue(new SwerveXStanceCommand(m_swerveSubsystem)); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getTriangleButton()).whileTrue(new SwerveLockWheels(m_swerveSubsystem)); 
   }
 
   private void configureNamedCommands(){

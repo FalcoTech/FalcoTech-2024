@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveBaseConstants;
@@ -65,6 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveBaseConstants.kBackRightAbsoluteEncoderReversed);
   
     private final ADIS16448_IMU gyro = new ADIS16448_IMU();    
+    private final Field2d field = new Field2d();
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics, 
       getGyroRotation2d(), 
@@ -81,6 +83,8 @@ public class SwerveSubsystem extends SubsystemBase {
         System.out.println(e);
       }
     }).start();
+
+    SmartDashboard.putData("Field", field);
 
     //Configure autobuilder last
     AutoBuilder.configureHolonomic(
@@ -193,5 +197,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Robot Heading:", getGyroHeading());
+
+    odometry.update(getGyroRotation2d(), getModulePositions());
+    field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
   }
 }

@@ -31,7 +31,7 @@ public final class Constants {
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 5;
 
-    public static final double kTeleopDriveSpeedScale = .25;
+    public static final double kTeleopDriveSpeedScale = 1;
     public static final double kTeleopDriveTriggerSpeedScale = .05;
 
     //distance between centers of right and left wheels on robot (track width)
