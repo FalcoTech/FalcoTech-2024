@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Swerve;
 
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -61,7 +62,7 @@ public class SwerveModule extends SubsystemBase {
     this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
     this.absoluteEncoderReversed = isAbsoluteEncoderReversed;
     absoluteEncoder = new CANcoder(absoluteEncoderID);
-
+    
     turnPID = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
     turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -76,13 +77,13 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getAbsoluteEncoderPosition(){
-    double angle = absoluteEncoder.getPosition().getValueAsDouble();
+    double angle = absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI;
     // double angle = Math.IEEEremainder(absoluteEncoder.getPosition(), 2*Math.PI);
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
   public double getAbsoluteEncoderVelocity(){
-    double velocity = absoluteEncoder.getVelocity().getValueAsDouble();
+    double velocity = absoluteEncoder.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI;
     return velocity * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
 
@@ -130,7 +131,7 @@ public class SwerveModule extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber(moduleName + "AbsEnc Rad", getAbsoluteEncoderPosition());
 
-    SmartDashboard.putNumber(moduleName + " ABS ENC GETPOSITION", absoluteEncoder.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber(moduleName + " ABS ENC GETPOSITION", absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI);
 
 
   }

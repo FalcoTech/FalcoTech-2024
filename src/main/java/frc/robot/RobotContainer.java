@@ -32,8 +32,8 @@ public class RobotContainer {
   private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
   private final Vision m_vision = new Vision();
 
-  // private final XboxController Pilot = new XboxController(0);
-  public final PS4Controller Pilot = new PS4Controller(OperatorConstants.kPilotPort);
+  private final XboxController Pilot = new XboxController(0);
+  // public final PS4Controller Pilot = new PS4Controller(OperatorConstants.kPilotPort);
 
   SendableChooser<Command> m_autoChooser = new SendableChooser<>();
      
@@ -43,9 +43,9 @@ public class RobotContainer {
       () -> -Pilot.getLeftY(), //-Pilot.getLeftY()
       () -> Pilot.getLeftX(),
       () -> -Pilot.getRightX(),
-      () -> Pilot.getL2Axis(),
-      () -> Pilot.getR2Axis(),
-      () -> !Pilot.getR1Button()));
+      () -> Pilot.getLeftTriggerAxis(),
+      () -> Pilot.getRightTriggerAxis(),
+      () -> !Pilot.getRightBumper()));
     
       // Warning:
       // Named commands must be registered before the creation of any PathPlanner Autos or Paths. 
@@ -57,11 +57,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
-    new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
+    new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
+    // new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
 
     
     // new Trigger(() -> Pilot.getTriangleButton()).whileTrue(new SwerveLockWheels(m_swerveSubsystem)); 
+    new Trigger(() -> Pilot.getYButton()).whileTrue(new SwerveLockWheels(m_swerveSubsystem)); 
+
   }
 
   private void configureNamedCommands(){

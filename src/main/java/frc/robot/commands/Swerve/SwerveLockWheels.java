@@ -17,10 +17,10 @@ public class SwerveLockWheels extends Command {
   private static final Rotation2d ninetyDegrees = Rotation2d.fromDegrees(90);
 
   private static final SwerveModuleState[] XStanceStates = new SwerveModuleState[] {
+    new SwerveModuleState(0.0, fortyFiveDegrees.unaryMinus()),
     new SwerveModuleState(0.0, fortyFiveDegrees),
-    new SwerveModuleState(0.0, fortyFiveDegrees.unaryMinus()),
-    new SwerveModuleState(0.0, fortyFiveDegrees.unaryMinus()),
-    new SwerveModuleState(0.0, fortyFiveDegrees)
+    new SwerveModuleState(0.0, fortyFiveDegrees),
+    new SwerveModuleState(0.0, fortyFiveDegrees.unaryMinus())
   };
   private static final SwerveModuleState[] TStanceStates = new SwerveModuleState[] {
     new SwerveModuleState(0.0, zeroDegrees),

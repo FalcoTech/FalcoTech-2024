@@ -31,7 +31,7 @@ public final class Constants {
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 5;
 
-    public static final double kTeleopDriveSpeedScale = 1;
+    public static final double kTeleopDriveSpeedScale = .5;
     public static final double kTeleopDriveTriggerSpeedScale = .05;
 
     //distance between centers of right and left wheels on robot (track width)
@@ -68,33 +68,33 @@ public final class Constants {
     public static final int kFrontLeftDriveMotorID = 10;
     public static final int kFrontLeftTurnMotorID = 11;
     public static final boolean kFrontLeftDriveMotorReversed = true;
-    public static final boolean kFrontLeftTurnMotorReversed = false;
+    public static final boolean kFrontLeftTurnMotorReversed = true;
     public static final int kFrontLeftAbsoluteEncoderID = 0;
-    public static final double kFrontLeftAbsoluteEncoderOffsetRadians = -0.964871965348721; 
+    public static final double kFrontLeftAbsoluteEncoderOffsetRadians = 0.960271973216411; 
     public static final boolean kFrontLeftAbsoluteEncoderReversed = false;
 
     public static final int kFrontRightDriveMotorID = 12;
     public static final int kFrontRightTurnMotorID = 13;
     public static final boolean kFrontRightDriveMotorReversed = false;
-    public static final boolean kFrontRightTurnMotorReversed = false;
+    public static final boolean kFrontRightTurnMotorReversed = true;
     public static final int kFrontRightAbsoluteEncoderID = 1;
-    public static final double kFrontRightAbsoluteEncoderOffsetRadians = -0.693357914686203; 
-    public static final boolean kFrontRightAbsoluteEncoderReversed = true;
+    public static final double kFrontRightAbsoluteEncoderOffsetRadians = -0.719436989518366; 
+    public static final boolean kFrontRightAbsoluteEncoderReversed = false;
 
     public static final int kBackLeftDriveMotorID = 14;
     public static final int kBackLeftTurnMotorID = 15;
     public static final boolean kBackLeftDriveMotorReversed = true;
-    public static final boolean kBackLeftTurnMotorReversed = false;
+    public static final boolean kBackLeftTurnMotorReversed = true;
     public static final int kBackLeftAbsoluteEncoderID = 2;
-    public static final double kBackLeftAbsoluteEncoderOffsetRadians = -3.066421397030354; 
+    public static final double kBackLeftAbsoluteEncoderOffsetRadians = -3.198349942741562; 
     public static final boolean kBackLeftAbsoluteEncoderReversed = false;
 
     public static final int kBackRightDriveMotorID = 16;
     public static final int kBackRightTurnMotorID = 17;
     public static final boolean kBackRightDriveMotorReversed = false;
-    public static final boolean kBackRightTurnMotorReversed = false;
+    public static final boolean kBackRightTurnMotorReversed = true;
     public static final int kBackRightAbsoluteEncoderID = 3;
-    public static final double kBackRightAbsoluteEncoderOffsetRadians = -1.58306497335434; 
+    public static final double kBackRightAbsoluteEncoderOffsetRadians = -4.704719076445262; 
     public static final boolean kBackRightAbsoluteEncoderReversed = false;
   }
 }

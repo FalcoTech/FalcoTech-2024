@@ -84,6 +84,8 @@ public class SwerveSubsystem extends SubsystemBase {
       }
     }).start();
 
+    odometry.update(getGyroRotation2d(), getModulePositions());
+    field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
     SmartDashboard.putData("Field", field);
 
     //Configure autobuilder last
@@ -93,10 +95,10 @@ public class SwerveSubsystem extends SubsystemBase {
       this::getChassisSpeeds, //chassisspeeds supplier
       this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer 
       new HolonomicPathFollowerConfig(
-        new PIDConstants(3.0, 0.0, 0.0), // translation PID
-        new PIDConstants(3.0, 0.0, 0.0), // rotation PID
+        new PIDConstants(3, 0.0, 0.0), // translation PID
+        new PIDConstants(3, 0.0, 0.0), // rotation PID
         DriveConstants.kMaxSpeedMetersPerSecond, //max module speed m/s
-        1.0, //drivebase radius
+        .4, //drivebase radius
         new ReplanningConfig()
       ), 
       () -> {
@@ -139,9 +141,9 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void swerveDriveRobotRelative(double xSpdFB, double ySpdLR, double rotSpd){
-    double xSpeedCommanded = xSpdFB * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedCommanded = ySpdLR * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotSpeedCommanded = rotSpd * DriveConstants.kMaxAngularSpeedRadiansPerSecond;
+    double xSpeedCommanded = xSpdFB;
+    double ySpeedCommanded = ySpdLR;
+    double rotSpeedCommanded = rotSpd;
 
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded);
 
