@@ -97,4 +97,13 @@ public final class Constants {
     public static final double kBackRightAbsoluteEncoderOffsetRadians = -4.704719076445262; 
     public static final boolean kBackRightAbsoluteEncoderReversed = false;
   }
+
+  public static class VisionConstants{
+    public static final String kLimelightName = "limelight";
+
+    public static final double kLimelightMountHeight = 0;
+    public static final double kLimelightMountAngle = 0;
+
+    public static final double kApriltagHeight = 0;
+  }
 }
