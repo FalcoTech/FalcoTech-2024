@@ -21,57 +21,57 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveBaseConstants;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveChassisConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule frontLeftModule = new SwerveModule(
     "Front Left",
-    DriveBaseConstants.kFrontLeftDriveMotorID,
-    DriveBaseConstants.kFrontLeftTurnMotorID,
-    DriveBaseConstants.kFrontLeftDriveMotorReversed,
-    DriveBaseConstants.kFrontLeftTurnMotorReversed,
-    DriveBaseConstants.kFrontLeftAbsoluteEncoderID,
-    DriveBaseConstants.kFrontLeftAbsoluteEncoderOffsetRadians,
-    DriveBaseConstants.kFrontLeftAbsoluteEncoderReversed);
+    DriveChassisConstants.kFrontLeftDriveMotorID,
+    DriveChassisConstants.kFrontLeftTurnMotorID,
+    DriveChassisConstants.kFrontLeftDriveMotorReversed,
+    DriveChassisConstants.kFrontLeftTurnMotorReversed,
+    DriveChassisConstants.kFrontLeftAbsoluteEncoderID,
+    DriveChassisConstants.kFrontLeftAbsoluteEncoderOffsetRadians,
+    DriveChassisConstants.kFrontLeftAbsoluteEncoderReversed);
 
   private final SwerveModule frontRightModule = new SwerveModule(
     "Front Right",
-    DriveBaseConstants.kFrontRightDriveMotorID,
-    DriveBaseConstants.kFrontRightTurnMotorID,
-    DriveBaseConstants.kFrontRightDriveMotorReversed,
-    DriveBaseConstants.kFrontRightTurnMotorReversed,
-    DriveBaseConstants.kFrontRightAbsoluteEncoderID,
-    DriveBaseConstants.kFrontRightAbsoluteEncoderOffsetRadians,
-    DriveBaseConstants.kFrontRightAbsoluteEncoderReversed);
+    DriveChassisConstants.kFrontRightDriveMotorID,
+    DriveChassisConstants.kFrontRightTurnMotorID,
+    DriveChassisConstants.kFrontRightDriveMotorReversed,
+    DriveChassisConstants.kFrontRightTurnMotorReversed,
+    DriveChassisConstants.kFrontRightAbsoluteEncoderID,
+    DriveChassisConstants.kFrontRightAbsoluteEncoderOffsetRadians,
+    DriveChassisConstants.kFrontRightAbsoluteEncoderReversed);
 
   private final SwerveModule backLeftModule = new SwerveModule(
     "Back Left",
-    DriveBaseConstants.kBackLeftDriveMotorID,
-    DriveBaseConstants.kBackLeftTurnMotorID,
-    DriveBaseConstants.kBackLeftDriveMotorReversed,
-    DriveBaseConstants.kBackLeftTurnMotorReversed,
-    DriveBaseConstants.kBackLeftAbsoluteEncoderID,
-    DriveBaseConstants.kBackLeftAbsoluteEncoderOffsetRadians,
-    DriveBaseConstants.kBackLeftAbsoluteEncoderReversed);
+    DriveChassisConstants.kBackLeftDriveMotorID,
+    DriveChassisConstants.kBackLeftTurnMotorID,
+    DriveChassisConstants.kBackLeftDriveMotorReversed,
+    DriveChassisConstants.kBackLeftTurnMotorReversed,
+    DriveChassisConstants.kBackLeftAbsoluteEncoderID,
+    DriveChassisConstants.kBackLeftAbsoluteEncoderOffsetRadians,
+    DriveChassisConstants.kBackLeftAbsoluteEncoderReversed);
     
   private final SwerveModule backRightModule = new SwerveModule(
     "Back Right",
-    DriveBaseConstants.kBackRightDriveMotorID,
-    DriveBaseConstants.kBackRightTurnMotorID,
-    DriveBaseConstants.kBackRightDriveMotorReversed,
-    DriveBaseConstants.kBackRightTurnMotorReversed,
-    DriveBaseConstants.kBackRightAbsoluteEncoderID,
-    DriveBaseConstants.kBackRightAbsoluteEncoderOffsetRadians,
-    DriveBaseConstants.kBackRightAbsoluteEncoderReversed);
+    DriveChassisConstants.kBackRightDriveMotorID,
+    DriveChassisConstants.kBackRightTurnMotorID,
+    DriveChassisConstants.kBackRightDriveMotorReversed,
+    DriveChassisConstants.kBackRightTurnMotorReversed,
+    DriveChassisConstants.kBackRightAbsoluteEncoderID,
+    DriveChassisConstants.kBackRightAbsoluteEncoderOffsetRadians,
+    DriveChassisConstants.kBackRightAbsoluteEncoderReversed);
   
     private final ADIS16448_IMU gyro = new ADIS16448_IMU();    
     private final Field2d field = new Field2d();
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics, 
+      SwerveDriveConstants.kDriveKinematics, 
       getGyroRotation2d(), 
       getModulePositions(), 
-      new Pose2d(0, 0, getGyroRotation2d()));
+      new Pose2d(0, 0, getGyroRotation2d())); //initial pose
 
   /** Creates a new SwerveSubsystem. */
   public SwerveSubsystem() {
@@ -84,22 +84,22 @@ public class SwerveSubsystem extends SubsystemBase {
       }
     }).start();
 
-    odometry.update(getGyroRotation2d(), getModulePositions());
+    odometry.update(getGyroRotation2d(), getModulePositions()); //update initial odometry
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
     SmartDashboard.putData("Field", field);
 
     //Configure autobuilder last
-    AutoBuilder.configureHolonomic(
-      this::getPose2d, //get pose
-      this::resetPose, //reset pose
-      this::getChassisSpeeds, //chassisspeeds supplier
-      this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer 
+    AutoBuilder.configureHolonomic( //configure autobuilder
+      this::getPose2d, //Position supplier
+      this::resetPose, //reset position
+      this::getChassisSpeeds, //robot chassisspeeds supplier
+      this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer (command to drive robot) 
       new HolonomicPathFollowerConfig(
-        new PIDConstants(3, 0.0, 0.0), // translation PID
-        new PIDConstants(3, 0.0, 0.0), // rotation PID
-        DriveConstants.kMaxSpeedMetersPerSecond, //max module speed m/s
+        new PIDConstants(3, 0.0, 0.0), // robot translation PID
+        new PIDConstants(3, 0.0, 0.0), // robot rotation PID
+        SwerveDriveConstants.kMaxSpeedMetersPerSecond, //max swerve module speed (m/s)
         .4, //drivebase radius
-        new ReplanningConfig()
+        new ReplanningConfig() 
       ), 
       () -> {
         //mirror auto path for red side
@@ -133,7 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates, boolean ignoreSpeedCheck){
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveDriveConstants.kMaxSpeedMetersPerSecond); //hyperdrive prevention lol
     frontLeftModule.setDesiredState(desiredStates[0], ignoreSpeedCheck);
     frontRightModule.setDesiredState(desiredStates[1], ignoreSpeedCheck);
     backLeftModule.setDesiredState(desiredStates[2], ignoreSpeedCheck);
@@ -147,10 +147,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded);
 
-    SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates = SwerveDriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     setModuleStates(moduleStates, false);
   }
-  public void swerveDriveChassisSpeedsConsumer(ChassisSpeeds speeds){
+  public void swerveDriveChassisSpeedsConsumer(ChassisSpeeds speeds){ //for autobuilder, autobuilder gives a chassisspeed, and we extract the x, y, and rot speeds from it
     swerveDriveRobotRelative(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
   }
 
@@ -191,7 +191,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getChassisSpeeds(){
-    return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
 

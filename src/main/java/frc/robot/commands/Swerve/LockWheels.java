@@ -10,7 +10,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve.*;
 
-public class SwerveLockWheels extends Command {
+public class LockWheels extends Command {
+  private final SwerveSubsystem m_swerveSubsystem;
+
+  
   private static final Rotation2d fortyFiveDegrees = Rotation2d.fromDegrees(45);
 
   private static final Rotation2d zeroDegrees = Rotation2d.fromDegrees(0);
@@ -29,10 +32,9 @@ public class SwerveLockWheels extends Command {
     new SwerveModuleState(0.0, ninetyDegrees)
   };
 
-  private final SwerveSubsystem m_swerveSubsystem;
   /** Creates a new SwerveXStanceCommand. */
 
-  public SwerveLockWheels(SwerveSubsystem swerveSubsystem) {
+  public LockWheels(SwerveSubsystem swerveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_swerveSubsystem = swerveSubsystem;
     addRequirements(m_swerveSubsystem);

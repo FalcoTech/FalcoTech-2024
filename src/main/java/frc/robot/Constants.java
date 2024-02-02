@@ -21,10 +21,25 @@ public final class Constants {
     public static int kPilotPort = 0;
     public static int kCoPilotPort = 1;
 
-    public static double kPilotDeadband = 0.05; //https://i.ytimg.com/vi/NdGzov5OU_Y/maxresdefault.jpg 
+    public static double kPilotDeadband = 0.025; //https://i.ytimg.com/vi/NdGzov5OU_Y/maxresdefault.jpg 
   }
 
-  public static class DriveConstants {
+  public static class ModuleConstants {
+    public static final double kWheelDiaMeterMeters = Units.inchesToMeters(4);
+    public static final double kDriveMotorGearRatio = 1 / 6.12; 
+    public static final double kTurnMotorGearRatio = 1 / (150/7); 
+    
+    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiaMeterMeters;
+    public static final double kTurnEncoderRot2Radian = kTurnMotorGearRatio * 2 * Math.PI;
+    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
+    public static final double kTurnEncoderRPM2RadianPerSec = kTurnEncoderRot2Radian / 60.0;
+
+    public static final double kPTurning = 0.5;
+    public static final double kITurning = 0.0;
+    public static final double kDTurning = 0.0;
+  }
+
+  public static class SwerveDriveConstants {
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(16);
     public static final double kMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
@@ -49,22 +64,7 @@ public final class Constants {
     
   }
 
-  public static class ModuleConstants {
-    public static final double kWheelDiaMeterMeters = Units.inchesToMeters(4);
-    public static final double kDriveMotorGearRatio = 1 / 6.12; // change this
-    public static final double kTurnMotorGearRatio = 1 / (150/7); // change this
-    
-    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiaMeterMeters;
-    public static final double kTurnEncoderRot2Radian = kTurnMotorGearRatio * 2 * Math.PI;
-    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
-    public static final double kTurnEncoderRPM2RadianPerSec = kTurnEncoderRot2Radian / 60.0;
-
-    public static final double kPTurning = 0.5;
-    public static final double kITurning = 0.0;
-    public static final double kDTurning = 0.0;
-  }
-
-  public static class DriveBaseConstants {
+  public static class DriveChassisConstants {
     public static final int kFrontLeftDriveMotorID = 10;
     public static final int kFrontLeftTurnMotorID = 11;
     public static final boolean kFrontLeftDriveMotorReversed = true;
@@ -96,6 +96,19 @@ public final class Constants {
     public static final int kBackRightAbsoluteEncoderID = 3;
     public static final double kBackRightAbsoluteEncoderOffsetRadians = -4.704719076445262; 
     public static final boolean kBackRightAbsoluteEncoderReversed = false;
+  }
+
+  public static class IntakeConstants {
+    public static final int kFrontIntakeMotorID = 0;
+    public static final int kBackIntakeMotorID = 0;
+  }
+
+  public static class ShooterConstants {
+    public static final int kLeftShootMotorID = 0;
+    public static final int kRightShootMotorID = 0;
+
+    public static final double kShooterSpeakerSpeed = .25;
+    public static final double kShooterAmpSpeed = .1;
   }
 
   public static class VisionConstants{

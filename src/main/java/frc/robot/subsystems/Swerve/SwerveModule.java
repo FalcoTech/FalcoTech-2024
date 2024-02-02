@@ -18,7 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
@@ -56,15 +56,15 @@ public class SwerveModule extends SubsystemBase {
     
     driveEncoder = driveMotor.getEncoder();
 
-    driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
-    driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+    driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter); // Encoder ticks to meters
+    driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec); // Encoder RPM to meters per second
 
-    this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
+    this.absoluteEncoderOffsetRad = absoluteEncoderOffset; //magnet offset
     this.absoluteEncoderReversed = isAbsoluteEncoderReversed;
     absoluteEncoder = new CANcoder(absoluteEncoderID);
     
     turnPID = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, ModuleConstants.kDTurning);
-    turnPID.enableContinuousInput(-Math.PI, Math.PI);
+    turnPID.enableContinuousInput(-Math.PI, Math.PI); // Tells PID that the input is continuous
 
     resetEncoders();
   }
@@ -77,13 +77,12 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getAbsoluteEncoderPosition(){
-    double angle = absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI;
-    // double angle = Math.IEEEremainder(absoluteEncoder.getPosition(), 2*Math.PI);
+    double angle = absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI; // Encoder rotations * 2 * pi = radians
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
   public double getAbsoluteEncoderVelocity(){
-    double velocity = absoluteEncoder.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI;
+    double velocity = absoluteEncoder.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI; 
     return velocity * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
 
@@ -99,16 +98,16 @@ public class SwerveModule extends SubsystemBase {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getAbsoluteEncoderPosition()));
   }
   public void setDesiredState(SwerveModuleState state, boolean ignoreSpeedCheck){
-    if (Math.abs(state.speedMetersPerSecond) < 0.01 && !ignoreSpeedCheck){
+    if (Math.abs(state.speedMetersPerSecond) < 0.01 && !ignoreSpeedCheck){ // If the speed is less than 0.01 m/s, and we aren't purposely trying to do that stop the module
       stopMotors();
       return;
     }
 
-    state = SwerveModuleState.optimize(state, getSwerveModuleState().angle);
-    driveMotor.set(state.speedMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond);
-    turnMotor.set(turnPID.calculate(getAbsoluteEncoderPosition(), state.angle.getRadians()));
+    state = SwerveModuleState.optimize(state, getSwerveModuleState().angle); // Calculate the shortest path to the desired angle
+    driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
+    turnMotor.set(turnPID.calculate(getAbsoluteEncoderPosition(), state.angle.getRadians())); // Set the turn motor to the desired angle
 
-    SmartDashboard.putString(moduleName + " state", state.toString());    
+    SmartDashboard.putString(moduleName + " state", state.toString()); // Desired state debug info
   }
 
 
@@ -131,7 +130,7 @@ public class SwerveModule extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber(moduleName + "AbsEnc Rad", getAbsoluteEncoderPosition());
 
-    SmartDashboard.putNumber(moduleName + " ABS ENC GETPOSITION", absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI);
+    SmartDashboard.putNumber(moduleName + " ABS ENC RAW GETPOSITION", absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI);
 
 
   }
