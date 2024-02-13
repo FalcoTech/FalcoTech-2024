@@ -98,10 +98,10 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kFrontIntakeMotorID = 0; //PWM?
-    public static final int kBackIntakeMotorID = 0; //PWM?
+    public static final int kFrontIntakeMotorID = 0; //PWM
+    public static final int kBackIntakeMotorID = 1; //PWM
 
-    public static final int kLiftMotorID = 20; //CAN
+    public static final int kLiftMotorID = 2; //PWM
   }
 
   public static class TiltConstants {
