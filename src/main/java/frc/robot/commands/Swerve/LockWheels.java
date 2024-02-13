@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Swerve;
 
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +14,7 @@ import frc.robot.subsystems.Swerve.*;
 
 public class LockWheels extends Command {
   private final SwerveSubsystem m_swerveSubsystem;
-
+  private final Boolean m_initBrakeMode;
   
   private static final Rotation2d fortyFiveDegrees = Rotation2d.fromDegrees(45);
 
@@ -37,6 +39,7 @@ public class LockWheels extends Command {
   public LockWheels(SwerveSubsystem swerveSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_swerveSubsystem = swerveSubsystem;
+    this.m_initBrakeMode = m_swerveSubsystem.isBrakeMode();
     addRequirements(m_swerveSubsystem);
   }
 
@@ -55,8 +58,11 @@ public class LockWheels extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_swerveSubsystem.stopModules();
-    m_swerveSubsystem.coastModules();
+    m_swerveSubsystem.stopModules(); 
+    if (!m_initBrakeMode) { // If we were not in brake mode...
+      m_swerveSubsystem.coastModules(); // ...return to coast mode.
+    } // Otherwise, do nothing (stay in brake mode)
+    
   }
 
   // Returns true when the command should end.

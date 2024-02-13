@@ -2,47 +2,43 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Tilt;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Tilt;
 
-public class RunShooter extends Command {
-  private final Shooter m_ShooterSubsystem;
-  private final double shooterSpeed;
-  /** Creates a new RunShooter. POSITIVE speed will SHOOT note*/
-  public RunShooter(Shooter shooterSubsystem, 
-      double speed) {
+public class SetTiltAngleDegrees extends Command {
+  private final Tilt m_tiltSubsystem;
+  private final double setpoint;
+  /** Creates a new SetTiltToAngle. */
+  public SetTiltAngleDegrees(Tilt tiltSubsystem,
+      double setpointDegrees) {
+    this.m_tiltSubsystem = tiltSubsystem;
+    this.setpoint = setpointDegrees;
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_ShooterSubsystem = shooterSubsystem;
-    this.shooterSpeed = speed;
-
-    addRequirements(m_ShooterSubsystem);
+    addRequirements(m_tiltSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_ShooterSubsystem.setShooterSpeed(shooterSpeed);
+    // m_tiltSubsystem.setTiltToPoint(setpoint);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_ShooterSubsystem.stopShooter();
+    // m_tiltSubsystem.stopTilt();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // return m_tiltSubsystem.getTiltAngle() > (setpoint - 5) && m_tiltSubsystem.getTiltAngle() < (setpoint + 5);
     return false;
   }
 }

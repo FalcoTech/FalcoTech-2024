@@ -10,13 +10,13 @@ import frc.robot.subsystems.Intake;
 public class RunIntake extends Command {
   private final Intake m_intakeSubsystem;
   private final double intakeSpeed;
-  /** Creates a new RunIntake. NEGATIVE speed will SUCK notes*/
+  /** Command to run intake motors based on copilot input. NEGATIVE speed will SUCK notes*/
   public RunIntake(Intake intakeSubsystem,
-      double suckSpeed, double spitSpeed) {
+      double speed) {
 
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_intakeSubsystem = intakeSubsystem;
-    this.intakeSpeed = spitSpeed - suckSpeed;
+    this.intakeSpeed = speed;
     
 
     addRequirements(m_intakeSubsystem);
@@ -29,13 +29,13 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_intakeSubsystem.setIntakeSpeed(intakeSpeed);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_intakeSubsystem.stopIntake();
+    
   }
 
   // Returns true when the command should end.

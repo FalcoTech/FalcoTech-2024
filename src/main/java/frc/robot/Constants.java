@@ -21,7 +21,7 @@ public final class Constants {
     public static int kPilotPort = 0;
     public static int kCoPilotPort = 1;
 
-    public static double kPilotDeadband = 0.025; //https://i.ytimg.com/vi/NdGzov5OU_Y/maxresdefault.jpg 
+    public static double kPilotDeadband = 0.05; //https://i.ytimg.com/vi/NdGzov5OU_Y/maxresdefault.jpg 
   }
 
   public static class ModuleConstants {
@@ -46,22 +46,21 @@ public final class Constants {
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 5;
 
-    public static final double kTeleopDriveSpeedScale = .5;
-    public static final double kTeleopDriveTriggerSpeedScale = .05;
+    public static final double kTeleopDriveSpeedScale = .4;
+    public static final double kTeleopDriveTriggerSpeedScale = .1;
 
     //distance between centers of right and left wheels on robot (track width)
-    public static final double kTrackWidth = Units.inchesToMeters(26.375);
+    public static final double kTrackWidth = Units.inchesToMeters(20.75);
     //https://upload.wikimedia.org/wikipedia/commons/5/52/Wheelbase_and_Track.png
     //distance between centers of front and back wheels on robot (wheel base)
-    public static final double kWheelBase = Units.inchesToMeters(26.375);
+    public static final double kWheelBase = Units.inchesToMeters(20.75);
     
-    //TITANIUM TITANS SWERVE DRIVE KINEMATICS (And what I think will also work better)
+    //https://docs.wpilib.org/en/stable/docs/software/basic-programming/coordinate-system.html
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-      new Translation2d(kWheelBase/2, kTrackWidth/2),
-      new Translation2d(kWheelBase/2, -kTrackWidth/2), 
-      new Translation2d(-kWheelBase/2, kTrackWidth/2), 
-      new Translation2d(-kWheelBase/2, -kTrackWidth/2)); 
-    
+      new Translation2d(kWheelBase/2, kTrackWidth/2), //Front left
+      new Translation2d(kWheelBase/2, -kTrackWidth/2), // front right
+      new Translation2d(-kWheelBase/2, kTrackWidth/2), // back left
+      new Translation2d(-kWheelBase/2, -kTrackWidth/2)); // back right
   }
 
   public static class DriveChassisConstants {
@@ -99,13 +98,28 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kFrontIntakeMotorID = 0;
-    public static final int kBackIntakeMotorID = 0;
+    public static final int kFrontIntakeMotorID = 0; //PWM?
+    public static final int kBackIntakeMotorID = 0; //PWM?
+
+    public static final int kLiftMotorID = 20; //CAN
+  }
+
+  public static class TiltConstants {
+    public static final int kLeftTiltMotorID = 30; //CAN
+    public static final int kRightTiltMotorID = 31; //CAN
+
+    public static final int kTiltEncoderChannelA = 0;
+    public static final int kTiltEncoderChannelB = 0;
+    public static final int kTiltZeroOffset = 0;
+
+    public static final double kLiftPID_P = 0;
+    public static final double kLiftPID_I = 0;
+    public static final double kLiftPID_D = 0;
   }
 
   public static class ShooterConstants {
-    public static final int kLeftShootMotorID = 0;
-    public static final int kRightShootMotorID = 0;
+    public static final int kLeftShootMotorID = 40; //CAN
+    public static final int kRightShootMotorID = 41; //CAN
 
     public static final double kShooterSpeakerSpeed = .25;
     public static final double kShooterAmpSpeed = .1;

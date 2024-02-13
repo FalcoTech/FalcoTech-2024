@@ -7,14 +7,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Swerve.TeleOpDrive;
+import frc.robot.commands.Tilt.SetTiltAngleDegrees;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Swerve.LockWheels;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.*;
 
+import com.fasterxml.jackson.databind.util.PrimitiveArrayBuilder;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -33,10 +36,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined and initialized here...
+  // The robot's subsystems and commands are defined and initialized here
   private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
   private final Vision m_visionSubsystem = new Vision();
   private final Intake m_intakeSubsystem = new Intake();
+  private final Tilt m_tiltSubsystem = new Tilt();
   private final Shooter m_shooterSubsystem = new Shooter();
 
   
@@ -44,13 +48,14 @@ public class RobotContainer {
   // public final PS4Controller Pilot = new PS4Controller(OperatorConstants.kPilotPort);
   private final XboxController CoPilot = new XboxController(OperatorConstants.kCoPilotPort);
 
+  // The chooser for the autonomous routines
   SendableChooser<Command> m_autoChooser = new SendableChooser<>();
      
   public RobotContainer() {
     // Pathplanner Warning:
       // Named commands must be registered before the creation of any PathPlanner Autos or Paths. 
       // It is recommended to do this in RobotContainer, after subsystem initialization, but before the creation 
-      // of any other commands.
+      // of any other commands
     registerNamedCommands();
 
     configurePilotBindings();
@@ -58,19 +63,21 @@ public class RobotContainer {
     configureSmartDashboard();
   }
 
-  //TODO test joysticks to see where positive is. 
-  // new Trigger(() -> Operator.getButton()).onTrue(new Command(arguments)); //Template for creating a new command binding
+  // new Trigger(() -> OPERATOR.GETSOMEBUTTON()).onTrue(new COMMAND(ARGUMENTS)); //Template for creating a new command binding
   private void configurePilotBindings() {
     m_swerveSubsystem.setDefaultCommand(new TeleOpDrive( 
-      m_swerveSubsystem, 
-      () -> -Pilot.getLeftY(), //-Pilot.getLeftY()
-      () -> Pilot.getLeftX(),
+      m_swerveSubsystem,
+      //TODO: Change x and y back and test because I'm stupid - Gavin
+      () -> -Pilot.getLeftX(),
+      () -> -Pilot.getLeftY(),
       () -> -Pilot.getRightX(),
       () -> Pilot.getLeftTriggerAxis(),
       () -> Pilot.getRightTriggerAxis(),
       () -> !Pilot.getRightBumper()));
 
     new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.brakeModules())); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.coastModules())); //XBOX CONTROLLER
     // new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
 
     new Trigger(() -> Pilot.getYButton()).whileTrue(new LockWheels(m_swerveSubsystem)); //XBOX
@@ -80,11 +87,12 @@ public class RobotContainer {
   private void configureCoPilotBindings(){
     m_intakeSubsystem.setDefaultCommand(new RunIntake(
       m_intakeSubsystem, 
-      CoPilot.getLeftTriggerAxis(),
-      CoPilot.getRightTriggerAxis()));
+      CoPilot.getLeftTriggerAxis() - CoPilot.getRightTriggerAxis()));
 
-    new Trigger(() -> CoPilot.getBButton()).onTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterSpeakerSpeed)); //Shoot to Speaker
-    new Trigger(() -> CoPilot.getAButton()).onTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterAmpSpeed)); //Place to Amp
+    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterSpeakerSpeed)); //Shoot to Speaker
+    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterAmpSpeed)); //Place to Amp
+
+    //Multiple commands can be bound to the same button using command groups
   }
 
 
@@ -98,15 +106,16 @@ public class RobotContainer {
     //SHOOTER
     NamedCommands.registerCommand("Shoot Speaker", new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterSpeakerSpeed));
     NamedCommands.registerCommand("Shoot Amp", new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterAmpSpeed));
+
+    //TILT
   }
 
   private void configureSmartDashboard(){
     m_autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", m_autoChooser);
+    SmartDashboard.putData("Auto Chooser", m_autoChooser); //send auto chooser to smartdashboard
   }
 
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return m_autoChooser.getSelected();
+    return m_autoChooser.getSelected(); //return the selected auto command
   }
 }

@@ -69,14 +69,14 @@ public class SwerveModule extends SubsystemBase {
     resetEncoders();
   }
 
-  public double getDrivePosition(){
+  public double getDriveMeters(){
     return driveEncoder.getPosition();
   }
   public double getDriveVelocity(){
     return driveEncoder.getVelocity();
   }
 
-  public double getAbsoluteEncoderPosition(){
+  public double getAbsoluteEncoderRadians(){
     double angle = absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI; // Encoder rotations * 2 * pi = radians
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
@@ -92,10 +92,10 @@ public class SwerveModule extends SubsystemBase {
 
 
   public SwerveModuleState getSwerveModuleState(){
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderPosition()));
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRadians()));
   }
   public SwerveModulePosition getSwerveModulePosition(){
-    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getAbsoluteEncoderPosition()));
+    return new SwerveModulePosition(getDriveMeters(), new Rotation2d(getAbsoluteEncoderRadians()));
   }
   public void setDesiredState(SwerveModuleState state, boolean ignoreSpeedCheck){
     if (Math.abs(state.speedMetersPerSecond) < 0.01 && !ignoreSpeedCheck){ // If the speed is less than 0.01 m/s, and we aren't purposely trying to do that stop the module
@@ -105,7 +105,7 @@ public class SwerveModule extends SubsystemBase {
 
     state = SwerveModuleState.optimize(state, getSwerveModuleState().angle); // Calculate the shortest path to the desired angle
     driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
-    turnMotor.set(turnPID.calculate(getAbsoluteEncoderPosition(), state.angle.getRadians())); // Set the turn motor to the desired angle
+    turnMotor.set(turnPID.calculate(getAbsoluteEncoderRadians(), state.angle.getRadians())); // Set the turn motor to the desired angle
 
     SmartDashboard.putString(moduleName + " state", state.toString()); // Desired state debug info
   }
@@ -120,6 +120,9 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setIdleMode(IdleMode.kCoast);
     turnMotor.setIdleMode(IdleMode.kCoast);
   }
+  public Boolean isBrakeMode(){
+    return driveMotor.getIdleMode() == IdleMode.kBrake;
+  }
   public void stopMotors(){
     driveMotor.set(0);
     turnMotor.set(0);
@@ -128,10 +131,8 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber(moduleName + "AbsEnc Rad", getAbsoluteEncoderPosition());
-
-    SmartDashboard.putNumber(moduleName + " ABS ENC RAW GETPOSITION", absoluteEncoder.getPosition().refresh().getValueAsDouble() * 2 * Math.PI);
-
-
+    SmartDashboard.putNumber(moduleName + " AbsEnc Rad", getAbsoluteEncoderRadians());
+    SmartDashboard.putNumber(moduleName + " Gyro Angle", Math.IEEEremainder(Math.toDegrees(getAbsoluteEncoderRadians()), 360));
+    SmartDashboard.putNumber(moduleName + " Velocity", getDriveVelocity());
   }
 }

@@ -85,11 +85,11 @@ public class SwerveSubsystem extends SubsystemBase {
     }).start();
 
     odometry.update(getGyroRotation2d(), getModulePositions()); //update initial odometry
-    field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
-    SmartDashboard.putData("Field", field);
+    field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d()); //put robot on field widget
+    SmartDashboard.putData("Field", field); //send field to smartdashboard
 
     //Configure autobuilder last
-    AutoBuilder.configureHolonomic( //configure autobuilder
+    AutoBuilder.configureHolonomic(
       this::getPose2d, //Position supplier
       this::resetPose, //reset position
       this::getChassisSpeeds, //robot chassisspeeds supplier
@@ -98,7 +98,7 @@ public class SwerveSubsystem extends SubsystemBase {
         new PIDConstants(3, 0.0, 0.0), // robot translation PID
         new PIDConstants(3, 0.0, 0.0), // robot rotation PID
         SwerveDriveConstants.kMaxSpeedMetersPerSecond, //max swerve module speed (m/s)
-        .4, //drivebase radius
+        Math.hypot(SwerveDriveConstants.kTrackWidth/2, SwerveDriveConstants.kWheelBase/2), //drivebase radius
         new ReplanningConfig() 
       ), 
       () -> {
@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getGyroHeading(){
-    return Math.IEEEremainder(gyro.getAngle(), 360);
+    return Math.IEEEremainder(-gyro.getAngle(), 360);
   }  
   public Rotation2d getGyroRotation2d(){
     return Rotation2d.fromDegrees(getGyroHeading());
@@ -165,6 +165,9 @@ public class SwerveSubsystem extends SubsystemBase {
     frontRightModule.coastMotors();
     backLeftModule.coastMotors();
     backRightModule.coastMotors();
+  }
+  public Boolean isBrakeMode(){
+    return frontLeftModule.isBrakeMode();
   }
   public void stopModules(){
     frontLeftModule.stopMotors();

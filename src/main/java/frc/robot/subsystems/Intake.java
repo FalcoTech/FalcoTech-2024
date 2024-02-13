@@ -6,27 +6,22 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  // private final CANSparkMax frontIntakeMotor;
-  // private final CANSparkMax backIntakeMotor;
+  // private final VictorSP FrontIntakeMotor = new VictorSP(IntakeConstants.kFrontIntakeMotorID);
+  // private final VictorSP BackIntakeMotor = new VictorSP(IntakeConstants.kBackIntakeMotorID);
+
+  // private final CANSparkMax liftMotor = new CANSparkMax(IntakeConstants.kLiftMotorID, CANSparkMax.MotorType.kBrushless);
+  
   /** Creates a new Intake. */
   public Intake() {
-    // frontIntakeMotor = new CANSparkMax(IntakeConstants.kFrontIntakeMotorID, CANSparkMax.MotorType.kBrushless);
-    // backIntakeMotor = new CANSparkMax(IntakeConstants.kBackIntakeMotorID, CANSparkMax.MotorType.kBrushless);
-
-    // frontIntakeMotor.setInverted(false);
-    // backIntakeMotor.follow(frontIntakeMotor, false);
+    
   }
 
-  // public void setIntakeSpeed(double speed){
-  //   frontIntakeMotor.set(speed);
-  // }
-  // public void stopIntake(){
-  //   frontIntakeMotor.set(0);
-  // }
+  
 
   @Override
   public void periodic() {

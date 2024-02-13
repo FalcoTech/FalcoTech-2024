@@ -52,12 +52,13 @@ public class TeleOpDrive extends Command {
   @Override
   public void execute() {
     // Get the x, y, and rotation speeds from the joystick and apply the scale factor
-    double xSpeed = xSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
-    double ySpeed = ySpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    //TODO: Change x and y back and test because I'm stupid - Gavin
+    double ySpeed = xSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    double xSpeed = ySpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
     double leftTriggerRot = leftTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
     double rightTriggerRot = rightTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
-    // Calculate the rotation speed from the triggers and the joystick (will use 1 if you try to hyperdrive lol)
-    double rotSpeed = Math.min((rotSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale) + (leftTriggerRot - rightTriggerRot), 1.0); 
+    double rotSpeed = rotSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale + (rightTriggerRot - leftTriggerRot);
+    // Calculate the rotation speed from the triggers and the joystick (will use 1 if you try to hyperdrive) 
 
     // Apply a deadband to the x, y, and rotation speeds
     xSpeed = Math.abs(xSpeed) > OperatorConstants.kPilotDeadband ? xSpeed : 0;
