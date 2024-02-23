@@ -104,7 +104,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     state = SwerveModuleState.optimize(state, getSwerveModuleState().angle); // Calculate the shortest path to the desired angle
-    // driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
+    driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
     turnMotor.set(turnPID.calculate(getAbsoluteEncoderRadians(), state.angle.getRadians())); // Set the turn motor to the desired angle
 
     SmartDashboard.putString(moduleName + " state", state.toString()); // Desired state debug info

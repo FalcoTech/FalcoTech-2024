@@ -102,10 +102,10 @@ public final class Constants {
     public static final int kFrontIntakeMotorID = 20; //CAN
     public static final int kRearIntakeMotorID = 21; //CAN
 
-    public static final int kLiftMotorID = 22; //CAN
+    public static final int kTransferMotorID = 22; //CAN
 
-    public static final int kLowerLaserCanID = 23;
-    public static final int kUpperLaserCanID = 24;
+    public static final int kLowerLaserCanID = 23; //CAN
+    public static final int kUpperLaserCanID = 24; //CAN
   }
 
   public static class TiltConstants {

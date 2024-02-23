@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 
@@ -45,10 +46,13 @@ public class Tilt extends SubsystemBase {
   public double getTiltAngle(){
     return tiltEncoder.get();
   }
-
   public void setTiltToSetpoint(double setpointDegrees){
     leftTiltMotor.set(m_tiltPID.calculate(getTiltAngle(), setpointDegrees));
   }
+
+  public void resetTiltEncoder(){
+    tiltEncoder.reset();
+  } 
 
   @Override
   public void periodic() {
@@ -61,5 +65,7 @@ public class Tilt extends SubsystemBase {
     SmartDashboard.putNumber("RT Output %", rightTiltMotor.getAppliedOutput());
     SmartDashboard.putNumber("LT Amp Draw ", leftTiltMotor.getOutputCurrent());
     SmartDashboard.putNumber("RT Amp Draw ", rightTiltMotor.getOutputCurrent());
+
+    SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
   }
 }

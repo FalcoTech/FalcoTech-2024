@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
 
     rearIntakeMotor.follow(frontIntakeMotor);
 
-    transferMotor = new VictorSPX(IntakeConstants.kLiftMotorID);
+    transferMotor = new VictorSPX(IntakeConstants.kTransferMotorID);
     transferMotor.setNeutralMode(NeutralMode.Coast);
     transferMotor.setInverted(false);
 

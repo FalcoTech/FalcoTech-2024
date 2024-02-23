@@ -12,6 +12,7 @@ import frc.robot.subsystems.Vision;
 
 public class RunShooter extends Command {
   private final Shooter m_ShooterSubsystem = RobotContainer.m_shooterSubsystem;
+  private final Vision m_VisionSubsystem = RobotContainer.m_visionSubsystem;
   private double shooterSpeed;
   /** Creates a new RunShooter. POSITIVE speed will SHOOT note*/
   public RunShooter(double speed) {

@@ -33,17 +33,19 @@ public class RunIntake extends Command {
     if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
       m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
       m_intakeSubsystem.stopTransfer();
-    } else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
+    } 
+    else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
       m_intakeSubsystem.stopIntake();
       m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    } else if (m_intakeSubsystem.getNoteReady() && m_shooterSubsystem.getShooterSpeed() > 1){
+    } 
+    else if (m_intakeSubsystem.getNoteReady() && m_shooterSubsystem.getShooterSpeed() > 1){
       m_intakeSubsystem.stopIntake();
       m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    } else if (m_intakeSubsystem.getNoteReady()){
+    } 
+    else if (m_intakeSubsystem.getNoteReady()){
       m_intakeSubsystem.stopIntake();
       m_intakeSubsystem.stopTransfer();
     }
-    
   }
 
   // Called once the command ends or is interrupted.

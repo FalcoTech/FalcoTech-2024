@@ -88,7 +88,7 @@ public class RobotContainer {
 
   private void configureCoPilotBindings(){
     m_intakeSubsystem.setDefaultCommand(new RunIntake((() -> (CoPilot.getRightTriggerAxis() - CoPilot.getLeftTriggerAxis()))));
-    new Trigger(() -> CoPilot.getXButton()).whileTrue(new RunIntake(() -> 1.0)); //Shoot to Speaker
+    new Trigger(() -> CoPilot.getXButton()).whileTrue(new RunIntake(() -> 1.0));
 
 
     m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> CoPilot.getRightY()));

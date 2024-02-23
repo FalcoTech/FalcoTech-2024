@@ -6,8 +6,10 @@ package frc.robot.subsystems;
 
 import java.util.ResourceBundle.Control;
 
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -22,7 +24,8 @@ public class Shooter extends SubsystemBase {
 
   public Shooter() {
     leftShootMotor.setInverted(false);
-    rightShootMotor.setInverted(false);
+    leftShootMotor.setControl(new CoastOut());
+    rightShootMotor.setControl(new CoastOut());
 
     rightShootMotor.setControl(new Follower(leftShootMotor.getDeviceID(), true));
   }
