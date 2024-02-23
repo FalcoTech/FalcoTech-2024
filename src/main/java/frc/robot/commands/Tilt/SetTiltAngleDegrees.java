@@ -5,15 +5,15 @@
 package frc.robot.commands.Tilt;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Tilt;
 
 public class SetTiltAngleDegrees extends Command {
   private final Tilt m_tiltSubsystem;
-  private final double setpoint;
+  private double setpoint;
   /** Creates a new SetTiltToAngle. */
-  public SetTiltAngleDegrees(Tilt tiltSubsystem,
-      double setpointDegrees) {
-    this.m_tiltSubsystem = tiltSubsystem;
+  public SetTiltAngleDegrees(double setpointDegrees) {
+    this.m_tiltSubsystem = RobotContainer.m_tiltSubsystem;
     this.setpoint = setpointDegrees;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_tiltSubsystem);
@@ -26,13 +26,13 @@ public class SetTiltAngleDegrees extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_tiltSubsystem.setTiltToPoint(setpoint);
+    m_tiltSubsystem.setTiltToSetpoint(setpoint);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_tiltSubsystem.stopTilt();
+    m_tiltSubsystem.stopTilt();
   }
 
   // Returns true when the command should end.

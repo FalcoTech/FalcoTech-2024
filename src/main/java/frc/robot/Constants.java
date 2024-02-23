@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -46,7 +47,7 @@ public final class Constants {
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 5;
 
-    public static final double kTeleopDriveSpeedScale = .4;
+    public static final double kTeleopDriveSpeedScale = .1;
     public static final double kTeleopDriveTriggerSpeedScale = .1;
 
     //distance between centers of right and left wheels on robot (track width)
@@ -98,21 +99,24 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static final int kFrontIntakeMotorID = 0; //PWM
-    public static final int kBackIntakeMotorID = 1; //PWM
+    public static final int kFrontIntakeMotorID = 20; //CAN
+    public static final int kRearIntakeMotorID = 21; //CAN
 
-    public static final int kLiftMotorID = 2; //PWM
+    public static final int kLiftMotorID = 22; //CAN
+
+    public static final int kLowerLaserCanID = 23;
+    public static final int kUpperLaserCanID = 24;
   }
 
   public static class TiltConstants {
     public static final int kLeftTiltMotorID = 30; //CAN
     public static final int kRightTiltMotorID = 31; //CAN
 
-    public static final int kTiltEncoderChannelA = 0;
-    public static final int kTiltEncoderChannelB = 0;
+    public static final int kTiltEncoderDIOPort = 0; //DIO
+    
     public static final int kTiltZeroOffset = 0;
 
-    public static final double kLiftPID_P = 0;
+    public static final double kLiftPID_P = 14;
     public static final double kLiftPID_I = 0;
     public static final double kLiftPID_D = 0;
   }
@@ -128,9 +132,9 @@ public final class Constants {
   public static class VisionConstants{
     public static final String kLimelightName = "limelight";
 
-    public static final double kLimelightMountHeight = 0;
-    public static final double kLimelightMountAngle = 0;
+    public static final double kLimelightMountHeight = Units.feetToMeters(2);
+    public static final double kLimelightMountAngleDegrees = 40;
 
-    public static final double kApriltagHeight = 0;
+    public static final double kApriltagHeight = Units.feetToMeters(4.125);
   }
 }

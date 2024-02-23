@@ -6,42 +6,50 @@ package frc.robot.commands.Swerve;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveDriveConstants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 
 
 public class TeleOpDrive extends Command {
-  private final SwerveSubsystem m_swerveSubsystem;
+  private final SwerveSubsystem m_swerveSubsystem = RobotContainer.m_swerveSubsystem;
+  private final Vision m_visionSubsystem = RobotContainer.m_visionSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, rotSpdFunction;
   private final Supplier<Double> leftTriggerFunction, rightTriggerFunction;
   private final Supplier<Boolean> fieldRelativeFunction;
+  private final Supplier<Boolean> alignFunction;
   private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
 
+  private final PIDController m_visionRotationPID = new PIDController(0, 0, 0);
+
   /** Creates a new SwerveJoystickCommand */
-  public TeleOpDrive(SwerveSubsystem swerveSubsystem, 
+  public TeleOpDrive( 
       Supplier<Double> xSpdFB, Supplier<Double> ySpdLR, Supplier<Double> rotSpd,
       Supplier<Double> leftTriggerSlowTurn, Supplier<Double> rightTriggerSlowTurn,
-      Supplier<Boolean> fieldRelative) {
+      Supplier<Boolean> fieldRelative, Supplier<Boolean> alignRobot) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_swerveSubsystem = swerveSubsystem;
+    
     this.xSpdFunction = xSpdFB;
     this.ySpdFunction = ySpdLR;
     this.rotSpdFunction = rotSpd;
     this.leftTriggerFunction = leftTriggerSlowTurn;
     this.rightTriggerFunction = rightTriggerSlowTurn;
     this.fieldRelativeFunction = fieldRelative;
+    this.alignFunction = alignRobot;
 
     this.xLimiter = new SlewRateLimiter(SwerveDriveConstants.kTeleopDriveMaxAccelerationUnitsPerSecond);
     this.yLimiter = new SlewRateLimiter(SwerveDriveConstants.kTeleopDriveMaxAccelerationUnitsPerSecond); //Dampen the acceleration
     this.rotLimiter = new SlewRateLimiter(SwerveDriveConstants.kTeleopDriveMaxAngularAccelerationUnitsPerSecond);
 
-    addRequirements(m_swerveSubsystem);
+    addRequirements(RobotContainer.m_swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -69,6 +77,11 @@ public class TeleOpDrive extends Command {
     xSpeed = xLimiter.calculate(xSpeed) * SwerveDriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed = yLimiter.calculate(ySpeed) * SwerveDriveConstants.kMaxSpeedMetersPerSecond;
     rotSpeed = rotLimiter.calculate(rotSpeed) * SwerveDriveConstants.kMaxAngularSpeedRadiansPerSecond;
+
+    // If the vision align button is pressed, use the vision subsystem to align the robot
+    if (alignFunction.get()) { //Checks for align button
+      double error = m_visionSubsystem.getTX(); //maybe add or subtract the x speed to it for shooting on the move. 
+    }
 
     // Create a speed command to send to the drivetrain
     ChassisSpeeds chassisSpeeds;

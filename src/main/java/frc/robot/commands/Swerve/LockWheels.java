@@ -13,7 +13,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve.*;
 
 public class LockWheels extends Command {
-  private final SwerveSubsystem m_swerveSubsystem;
+  private final SwerveSubsystem m_swerveSubsystem = RobotContainer.m_swerveSubsystem;
   private final Boolean m_initBrakeMode;
   
   private static final Rotation2d fortyFiveDegrees = Rotation2d.fromDegrees(45);
@@ -36,9 +36,8 @@ public class LockWheels extends Command {
 
   /** Creates a new SwerveXStanceCommand. */
 
-  public LockWheels(SwerveSubsystem swerveSubsystem) {
+  public LockWheels() {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_swerveSubsystem = swerveSubsystem;
     this.m_initBrakeMode = m_swerveSubsystem.isBrakeMode();
     addRequirements(m_swerveSubsystem);
   }

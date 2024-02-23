@@ -16,36 +16,39 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
+  private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.kLeftShootMotorID);
+  private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.kRightShootMotorID);
   /** Creates a new Shooter. */
-  // private final TalonFX leftShootMotor;
-  // private final TalonFX rightShootMotor;
 
   public Shooter() {
-    // leftShootMotor = new TalonFX(ShooterConstants.kLeftShootMotorID);
-    // rightShootMotor = new TalonFX(ShooterConstants.kRightShootMotorID);
+    leftShootMotor.setInverted(false);
+    rightShootMotor.setInverted(false);
 
-    // leftShootMotor.setInverted(false);
-    // rightShootMotor.setControl(new Follower(leftShootMotor.getDeviceID(), false));
-
+    rightShootMotor.setControl(new Follower(leftShootMotor.getDeviceID(), true));
   }
 
-  // public void setShooterSpeed(double speed){
-  //   leftShootMotor.set(speed);
-  // }
-  // public void stopShooter(){
-  //   leftShootMotor.set(0);
-  // }
-  // public double getShooterSpeed() {
-  //   double leftMotorSpeed = leftShootMotor.getVelocity().refresh().getValueAsDouble();
-  //   double rightMotorSpeed = rightShootMotor.getVelocity().refresh().getValueAsDouble();
-  //   return (leftMotorSpeed + rightMotorSpeed) / 2;
-  // }
+  public void setShooterSpeed(double speed){
+    leftShootMotor.set(speed);
+  }
+  public void stopShooter(){
+    leftShootMotor.set(0);
+  }
+
+  public double getShooterSpeed(){
+    double leftShooterSpeed = leftShootMotor.getVelocity().refresh().getValueAsDouble();
+    double rightShooterSpeed = rightShootMotor.getVelocity().refresh().getValueAsDouble();
+    
+    return (leftShooterSpeed + rightShooterSpeed) / 2;
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Shooter Speed", getShooterSpeed());
-    // SmartDashboard.putNumber("Left Shooter Speed", leftShootMotor.getVelocity().refresh().getValueAsDouble());
-    // SmartDashboard.putNumber("Right Shooter Speed", rightShootMotor.getVelocity().refresh().getValueAsDouble());
+    SmartDashboard.putNumber("Shooter Speed", getShooterSpeed());
+    SmartDashboard.putNumber("Left Shooter Speed", leftShootMotor.getVelocity().refresh().getValueAsDouble());
+    SmartDashboard.putNumber("Right Shooter Speed", rightShootMotor.getVelocity().refresh().getValueAsDouble());
+
+    SmartDashboard.putNumber("Left Shooter Voltage Draw", leftShootMotor.getMotorVoltage().refresh().getValueAsDouble());
+    SmartDashboard.putNumber("Right Shooter Voltage Draw", rightShootMotor.getMotorVoltage().refresh().getValueAsDouble());
   }
 }

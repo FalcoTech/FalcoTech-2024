@@ -16,6 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -196,14 +198,25 @@ public class SwerveSubsystem extends SubsystemBase {
   public ChassisSpeeds getChassisSpeeds(){
     return SwerveDriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
+  public ChassisSpeeds getFieldRelativeChassisSpeeds(){
+    return ChassisSpeeds.fromRobotRelativeSpeeds(
+      getChassisSpeeds().vxMetersPerSecond, 
+      getChassisSpeeds().vyMetersPerSecond, 
+      getChassisSpeeds().omegaRadiansPerSecond, 
+      getGyroRotation2d());
+  }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Robot Heading:", getGyroHeading());
+    // SmartDashboard.putNumber("Robot Heading:", getGyroHeading());
+    SmartDashboard.putData("Gyro", gyro);
+    SmartDashboard.putBoolean("Gyro Connected", gyro.isConnected());
 
     odometry.update(getGyroRotation2d(), getModulePositions());
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
+
+    SmartDashboard.putBoolean("Idle Mode", !isBrakeMode());
   }
 }

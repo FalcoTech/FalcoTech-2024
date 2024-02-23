@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Swerve.TeleOpDrive;
+import frc.robot.commands.Tilt.ManualTilt;
 import frc.robot.commands.Tilt.SetTiltAngleDegrees;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.Shooter.RunShooter;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.util.PrimitiveArrayBuilder;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,11 +39,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined and initialized here
-  private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
-  private final Vision m_visionSubsystem = new Vision();
-  private final Intake m_intakeSubsystem = new Intake();
-  private final Tilt m_tiltSubsystem = new Tilt();
-  private final Shooter m_shooterSubsystem = new Shooter();
+  public static final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  public static final Vision m_visionSubsystem = new Vision();
+  public static final Intake m_intakeSubsystem = new Intake();
+  public static final Tilt m_tiltSubsystem = new Tilt();
+  public static final Shooter m_shooterSubsystem = new Shooter();
 
   
   private final XboxController Pilot = new XboxController(OperatorConstants.kPilotPort);
@@ -66,46 +68,50 @@ public class RobotContainer {
   // new Trigger(() -> OPERATOR.GETSOMEBUTTON()).onTrue(new COMMAND(ARGUMENTS)); //Template for creating a new command binding
   private void configurePilotBindings() {
     m_swerveSubsystem.setDefaultCommand(new TeleOpDrive( 
-      m_swerveSubsystem,
       //TODO: Change x and y back and test because I'm stupid - Gavin
       () -> -Pilot.getLeftX(),
       () -> -Pilot.getLeftY(),
       () -> -Pilot.getRightX(),
-      () -> Pilot.getLeftTriggerAxis(),
       () -> Pilot.getRightTriggerAxis(),
-      () -> !Pilot.getRightBumper()));
+      () -> Pilot.getLeftTriggerAxis(),
+      () -> !Pilot.getRightBumper(), //Field Relative
+      () -> Pilot.getXButton())); //Vision Align
 
     new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
     new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.brakeModules())); //XBOX CONTROLLER
     new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.coastModules())); //XBOX CONTROLLER
     // new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
 
-    new Trigger(() -> Pilot.getYButton()).whileTrue(new LockWheels(m_swerveSubsystem)); //XBOX
-    // new Trigger(() -> Pilot.getTriangleButton()).whileTrue(new SwerveLockWheels(m_swerveSubsystem)); //PS4
+    new Trigger(() -> Pilot.getYButton()).whileTrue(new LockWheels()); //XBOX
+    // new Trigger(() -> Pilot.getTriangleButton()).whileTrue(new SwerveLockWheels()); //PS4
   }
 
   private void configureCoPilotBindings(){
-    m_intakeSubsystem.setDefaultCommand(new RunIntake(
-      m_intakeSubsystem, 
-      CoPilot.getLeftTriggerAxis() - CoPilot.getRightTriggerAxis()));
+    m_intakeSubsystem.setDefaultCommand(new RunIntake((() -> (CoPilot.getRightTriggerAxis() - CoPilot.getLeftTriggerAxis()))));
+    new Trigger(() -> CoPilot.getXButton()).whileTrue(new RunIntake(() -> 1.0)); //Shoot to Speaker
 
-    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterSpeakerSpeed)); //Shoot to Speaker
-    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterAmpSpeed)); //Place to Amp
+
+    m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> CoPilot.getRightY()));
+    new Trigger(() -> CoPilot.getYButton()).whileTrue(new SetTiltAngleDegrees(.5)); //Shoot to Speaker
+
+
+
+    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(ShooterConstants.kShooterSpeakerSpeed)); //Shoot to Speaker
+    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(ShooterConstants.kShooterAmpSpeed)); //Place to Amp
 
     //Multiple commands can be bound to the same button using command groups
   }
 
 
-
   private void registerNamedCommands(){
     //SWERVE
-    NamedCommands.registerCommand("Lock Wheels", new LockWheels(m_swerveSubsystem));
+    NamedCommands.registerCommand("Lock Wheels", new LockWheels());
 
     //INTAKE
 
     //SHOOTER
-    NamedCommands.registerCommand("Shoot Speaker", new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterSpeakerSpeed));
-    NamedCommands.registerCommand("Shoot Amp", new RunShooter(m_shooterSubsystem, ShooterConstants.kShooterAmpSpeed));
+    NamedCommands.registerCommand("Shoot Speaker", new RunShooter(ShooterConstants.kShooterSpeakerSpeed));
+    NamedCommands.registerCommand("Shoot Amp", new RunShooter(ShooterConstants.kShooterAmpSpeed));
 
     //TILT
   }

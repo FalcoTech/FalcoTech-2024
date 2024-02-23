@@ -5,47 +5,61 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalSource;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 
 public class Tilt extends SubsystemBase {
-  // private final CANSparkMax leftLiftMotor;
-  // private final CANSparkMax rightLiftMotor;
+  private final CANSparkMax leftTiltMotor = new CANSparkMax(TiltConstants.kLeftTiltMotorID, MotorType.kBrushless);
+  private final CANSparkMax rightTiltMotor = new CANSparkMax(TiltConstants.kRightTiltMotorID, MotorType.kBrushless);
 
-  // private final Encoder tiltEncoder;
+  private final DutyCycleEncoder tiltEncoder = new DutyCycleEncoder(TiltConstants.kTiltEncoderDIOPort);
 
-  // private final PIDController tiltPID;
+  private final PIDController m_tiltPID = new PIDController(TiltConstants.kLiftPID_P, TiltConstants.kLiftPID_I, TiltConstants.kLiftPID_D);
+
 
   /** Creates a new Tilt. */
   public Tilt() {
-    // leftLiftMotor = new CANSparkMax(TiltConstants.kLeftTiltMotorID, MotorType.kBrushless);
-    // rightLiftMotor = new CANSparkMax(TiltConstants.kRightTiltMotorID, MotorType.kBrushless);
-    // rightLiftMotor.follow(leftLiftMotor);
+    leftTiltMotor.setIdleMode(IdleMode.kBrake);
+    rightTiltMotor.setIdleMode(IdleMode.kBrake);
 
-    // tiltEncoder = new Encoder(TiltConstants.kTiltEncoderChannelA, TiltConstants.kTiltEncoderChannelB);
-
-    // tiltPID = new PIDController(TiltConstants.kLiftPID_P, TiltConstants.kLiftPID_I, TiltConstants.kLiftPID_D);
+    leftTiltMotor.setInverted(false);
+    rightTiltMotor.follow(leftTiltMotor, true);
+  }
+  
+  public void moveTilt(double speed){
+    leftTiltMotor.set(speed);
+  }
+  public void stopTilt(){
+    leftTiltMotor.set(0);
   }
 
-  // public void setTiltSpeed(double speed){
-  //   leftLiftMotor.set(speed);
-  // }
-  // public double getTiltAngle(){
-  //   return tiltEncoder.getDistance();
-  // }
-  // public void setTiltToPoint(double setpointdegrees){
-  //   setTiltSpeed(tiltPID.calculate(getTiltAngle(), setpointdegrees));
-  // }
-  // public void stopTilt(){
-  //   leftLiftMotor.set(0);
-  // }
+  public double getTiltAngle(){
+    return tiltEncoder.get();
+  }
+
+  public void setTiltToSetpoint(double setpointDegrees){
+    leftTiltMotor.set(m_tiltPID.calculate(getTiltAngle(), setpointDegrees));
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Tilt Encoder Angle", getTiltAngle());
+    SmartDashboard.putNumber("Tilt Encoder Setpoint", m_tiltPID.getSetpoint());
+    SmartDashboard.putBoolean("Tilt Encoder Connected", tiltEncoder.isConnected());
+
+    SmartDashboard.putNumber("LT Output %", leftTiltMotor.getAppliedOutput());
+    SmartDashboard.putNumber("RT Output %", rightTiltMotor.getAppliedOutput());
+    SmartDashboard.putNumber("LT Amp Draw ", leftTiltMotor.getOutputCurrent());
+    SmartDashboard.putNumber("RT Amp Draw ", rightTiltMotor.getOutputCurrent());
   }
 }

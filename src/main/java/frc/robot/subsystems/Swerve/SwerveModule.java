@@ -104,7 +104,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     state = SwerveModuleState.optimize(state, getSwerveModuleState().angle); // Calculate the shortest path to the desired angle
-    driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
+    // driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kMaxSpeedMetersPerSecond); // Set the drive motor to the desired speed
     turnMotor.set(turnPID.calculate(getAbsoluteEncoderRadians(), state.angle.getRadians())); // Set the turn motor to the desired angle
 
     SmartDashboard.putString(moduleName + " state", state.toString()); // Desired state debug info
@@ -132,7 +132,6 @@ public class SwerveModule extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber(moduleName + " AbsEnc Rad", getAbsoluteEncoderRadians());
-    SmartDashboard.putNumber(moduleName + " Gyro Angle", Math.IEEEremainder(Math.toDegrees(getAbsoluteEncoderRadians()), 360));
     SmartDashboard.putNumber(moduleName + " Velocity", getDriveVelocity());
   }
 }
