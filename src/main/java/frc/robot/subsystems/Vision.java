@@ -36,10 +36,7 @@ public class Vision extends SubsystemBase {
   }
 
   public double getDistanceToTarget(){
-    double verticalOffset = getTY();
-    double angleToGoalRadians = Units.degreesToRadians(verticalOffset + VisionConstants.kLimelightMountAngleDegrees);
-
-    return (VisionConstants.kApriltagHeight - VisionConstants.kLimelightMountHeight) / Math.tan(angleToGoalRadians);
+    return LimelightHelpers.getTargetPose_CameraSpace("")[2];
   }
 
   public double[] getTargetPose(){

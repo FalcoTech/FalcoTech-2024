@@ -34,6 +34,8 @@ public class Tilt extends SubsystemBase {
 
     leftTiltMotor.setInverted(false);
     rightTiltMotor.follow(leftTiltMotor, true);
+
+    SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
   }
   
   public void moveTilt(double speed){
@@ -66,6 +68,5 @@ public class Tilt extends SubsystemBase {
     SmartDashboard.putNumber("LT Amp Draw ", leftTiltMotor.getOutputCurrent());
     SmartDashboard.putNumber("RT Amp Draw ", rightTiltMotor.getOutputCurrent());
 
-    SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
   }
 }

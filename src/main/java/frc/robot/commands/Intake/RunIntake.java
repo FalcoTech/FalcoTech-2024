@@ -30,22 +30,24 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
-      m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
-      m_intakeSubsystem.stopTransfer();
-    } 
-    else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
-      m_intakeSubsystem.stopIntake();
-      m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    } 
-    else if (m_intakeSubsystem.getNoteReady() && m_shooterSubsystem.getShooterSpeed() > 1){
-      m_intakeSubsystem.stopIntake();
-      m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    } 
-    else if (m_intakeSubsystem.getNoteReady()){
-      m_intakeSubsystem.stopIntake();
-      m_intakeSubsystem.stopTransfer();
-    }
+    // if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
+    //   m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
+    //   m_intakeSubsystem.stopTransfer();
+    // } 
+    // else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
+    //   m_intakeSubsystem.stopIntake();
+    //   m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
+    // } 
+    // else if (m_intakeSubsystem.getNoteReady() && m_shooterSubsystem.getShooterSpeed() > 1){
+    //   m_intakeSubsystem.stopIntake();
+    //   m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
+    // } 
+    // else if (m_intakeSubsystem.getNoteReady()){
+    //   m_intakeSubsystem.stopIntake();
+    //   m_intakeSubsystem.stopTransfer();
+    // }
+    m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
+    m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
   }
 
   // Called once the command ends or is interrupted.

@@ -29,7 +29,7 @@ public class ManualTilt extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_tiltSubsystem.moveTilt(tiltSpeed.get());
+    m_tiltSubsystem.moveTilt(tiltSpeed.get() * .2);
   }
 
   // Called once the command ends or is interrupted.

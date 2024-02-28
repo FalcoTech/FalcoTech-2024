@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
 
   public Shooter() {
-    leftShootMotor.setInverted(false);
+    leftShootMotor.setInverted(true);
     leftShootMotor.setControl(new CoastOut());
     rightShootMotor.setControl(new CoastOut());
 
@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Shooter Speed", getShooterSpeed());
+    SmartDashboard.putNumber("Shooter Speed", getShooterSpeed() * 60);
     SmartDashboard.putNumber("Left Shooter Speed", leftShootMotor.getVelocity().refresh().getValueAsDouble());
     SmartDashboard.putNumber("Right Shooter Speed", rightShootMotor.getVelocity().refresh().getValueAsDouble());
 

@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase {
 
     transferMotor = new VictorSPX(IntakeConstants.kTransferMotorID);
     transferMotor.setNeutralMode(NeutralMode.Coast);
-    transferMotor.setInverted(false);
+    transferMotor.setInverted(true);
 
     lowerLaserCan = new LaserCan(IntakeConstants.kLowerLaserCanID);
     upperLaserCan = new LaserCan(IntakeConstants.kUpperLaserCanID);

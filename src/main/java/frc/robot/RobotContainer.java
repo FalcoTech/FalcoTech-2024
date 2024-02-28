@@ -72,8 +72,8 @@ public class RobotContainer {
       () -> -Pilot.getLeftX(),
       () -> -Pilot.getLeftY(),
       () -> -Pilot.getRightX(),
-      () -> Pilot.getRightTriggerAxis(),
-      () -> Pilot.getLeftTriggerAxis(),
+      () -> 0.0, //Pilot.getRightTriggerAxis()
+      () -> 0.0, //Pilot.getLeftTriggerAxis()
       () -> !Pilot.getRightBumper(), //Field Relative
       () -> Pilot.getXButton())); //Vision Align
 
@@ -92,7 +92,7 @@ public class RobotContainer {
 
 
     m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> CoPilot.getRightY()));
-    new Trigger(() -> CoPilot.getYButton()).whileTrue(new SetTiltAngleDegrees(.5)); //Shoot to Speaker
+    new Trigger(() -> CoPilot.getYButton()).whileTrue(new SetTiltAngleDegrees(.3)); //Shoot to Speaker
 
 
 

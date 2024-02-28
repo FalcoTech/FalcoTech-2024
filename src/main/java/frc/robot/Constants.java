@@ -45,9 +45,10 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
-    public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 5;
+    public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 1;
 
-    public static final double kTeleopDriveSpeedScale = .1;
+    public static final double kTeleopDriveSpeedScale = .5;
+    public static final double kTeleopTurnSpeedScale = .3;
     public static final double kTeleopDriveTriggerSpeedScale = .1;
 
     //distance between centers of right and left wheels on robot (track width)
@@ -116,7 +117,7 @@ public final class Constants {
     
     public static final int kTiltZeroOffset = 0;
 
-    public static final double kLiftPID_P = 14;
+    public static final double kLiftPID_P = .1;
     public static final double kLiftPID_I = 0;
     public static final double kLiftPID_D = 0;
   }
@@ -125,16 +126,17 @@ public final class Constants {
     public static final int kLeftShootMotorID = 40; //CAN
     public static final int kRightShootMotorID = 41; //CAN
 
-    public static final double kShooterSpeakerSpeed = .25;
-    public static final double kShooterAmpSpeed = .1;
+    public static final double kShooterSpeakerSpeed = 1.0;
+    public static final double kShooterAmpSpeed = .25;
   }
 
   public static class VisionConstants{
     public static final String kLimelightName = "limelight";
 
-    public static final double kLimelightMountHeight = Units.feetToMeters(2);
-    public static final double kLimelightMountAngleDegrees = 40;
+    public static final double kLimelightMountHeight = Units.inchesToMeters(16.8125);
+    public static final double kLimelightMountAngleDegrees = 71.56;
 
+    // public static final double kApriltagHeight = Units.feetToMeters(4.125);
     public static final double kApriltagHeight = Units.feetToMeters(4.125);
   }
 }

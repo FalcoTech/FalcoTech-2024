@@ -28,7 +28,7 @@ public class TeleOpDrive extends Command {
   private final Supplier<Boolean> alignFunction;
   private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
 
-  private final PIDController m_visionRotationPID = new PIDController(0, 0, 0);
+  private final PIDController m_visionRotationPID = new PIDController(.075, 0, 0);
 
   /** Creates a new SwerveJoystickCommand */
   public TeleOpDrive( 
@@ -65,7 +65,7 @@ public class TeleOpDrive extends Command {
     double xSpeed = ySpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
     double leftTriggerRot = leftTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
     double rightTriggerRot = rightTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
-    double rotSpeed = rotSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale + (rightTriggerRot - leftTriggerRot);
+    double rotSpeed = rotSpdFunction.get() * SwerveDriveConstants.kTeleopTurnSpeedScale + (rightTriggerRot - leftTriggerRot);
     // Calculate the rotation speed from the triggers and the joystick (will use 1 if you try to hyperdrive) 
 
     // Apply a deadband to the x, y, and rotation speeds
@@ -79,8 +79,12 @@ public class TeleOpDrive extends Command {
     rotSpeed = rotLimiter.calculate(rotSpeed) * SwerveDriveConstants.kMaxAngularSpeedRadiansPerSecond;
 
     // If the vision align button is pressed, use the vision subsystem to align the robot
-    if (alignFunction.get()) { //Checks for align button
-      double error = m_visionSubsystem.getTX(); //maybe add or subtract the x speed to it for shooting on the move. 
+    if (alignFunction.get() && m_visionSubsystem.getTV()) { //Checks for align button
+      double error = m_visionSubsystem.getTX(); //maybe add or subtract the x speed to it for shooting on the move.
+      double alignSpeed = m_visionRotationPID.calculate(error, 0);
+
+      double alignCommanded = Math.min((rotSpeed + alignSpeed), 1);
+      rotSpeed = alignCommanded;
     }
 
     // Create a speed command to send to the drivetrain

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Swerve;
 
+import org.opencv.core.Mat;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -16,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
@@ -89,6 +92,27 @@ public class SwerveSubsystem extends SubsystemBase {
     odometry.update(getGyroRotation2d(), getModulePositions()); //update initial odometry
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d()); //put robot on field widget
     SmartDashboard.putData("Field", field); //send field to smartdashboard
+
+    SmartDashboard.putData("Swerve Drive", new Sendable() {
+      @Override
+      public void initSendable(SendableBuilder builder){
+        builder.setSmartDashboardType("SwerveDrive");
+
+        builder.addDoubleProperty("Front Left Angle", () -> frontLeftModule.getAbsoluteEncoderRadians(), null);
+        builder.addDoubleProperty("Front Left Velocity", () -> frontLeftModule.getDriveVelocity(), null);
+
+        builder.addDoubleProperty("Front Right Angle", () -> frontRightModule.getAbsoluteEncoderRadians(), null);
+        builder.addDoubleProperty("Front Right Velocity", () -> frontRightModule.getDriveVelocity(), null);
+
+        builder.addDoubleProperty("Back Left Angle", () -> backLeftModule.getAbsoluteEncoderRadians(), null);
+        builder.addDoubleProperty("Back Left Velocity", () -> backLeftModule.getDriveVelocity(), null);
+
+        builder.addDoubleProperty("Back Right Angle", () -> backRightModule.getAbsoluteEncoderRadians(), null);
+        builder.addDoubleProperty("Back Right Velocity", () -> backRightModule.getDriveVelocity(), null);
+
+        builder.addDoubleProperty("Robot Angle", () -> Units.degreesToRadians(getGyroHeading()), null);
+      }
+    });
 
     //Configure autobuilder last
     AutoBuilder.configureHolonomic(
