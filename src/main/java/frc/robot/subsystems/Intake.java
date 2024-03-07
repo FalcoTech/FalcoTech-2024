@@ -79,6 +79,8 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Lower Intake Output %", frontIntakeMotor.getMotorOutputPercent());
     SmartDashboard.putNumber("Transfer Motor Output %", transferMotor.getMotorOutputPercent());
+    SmartDashboard.putNumber("Lower Intake Power Consumption", frontIntakeMotor.getMotorOutputVoltage());
+    SmartDashboard.putNumber("Transfer Motor Power Consumption", transferMotor.getMotorOutputVoltage());
 
     SmartDashboard.putBoolean("Transfer Ready", getTransferReady());
     SmartDashboard.putBoolean("Note Ready", getNoteReady());

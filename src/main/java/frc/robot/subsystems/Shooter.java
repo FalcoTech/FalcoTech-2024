@@ -6,9 +6,11 @@ package frc.robot.subsystems;
 
 import java.util.ResourceBundle.Control;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MusicTone;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,6 +22,7 @@ import frc.robot.Constants.ShooterConstants;
 public class Shooter extends SubsystemBase {
   private final TalonFX leftShootMotor = new TalonFX(ShooterConstants.kLeftShootMotorID);
   private final TalonFX rightShootMotor = new TalonFX(ShooterConstants.kRightShootMotorID);
+
   /** Creates a new Shooter. */
 
   public Shooter() {

@@ -38,7 +38,6 @@ public class SetTiltAngleDegrees extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return m_tiltSubsystem.getTiltAngle() > (setpoint - 5) && m_tiltSubsystem.getTiltAngle() < (setpoint + 5);
-    return false;
+    return m_tiltSubsystem.getTiltAngle() >= (setpoint - .01) && m_tiltSubsystem.getTiltAngle() <= (setpoint + .01);
   }
 }

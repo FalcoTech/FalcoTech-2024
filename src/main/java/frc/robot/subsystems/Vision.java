@@ -37,25 +37,7 @@ public class Vision extends SubsystemBase {
 
   public double getDistanceToTarget(){
     return LimelightHelpers.getTargetPose_CameraSpace("")[2];
-  }
-
-  public double[] getTargetPose(){
-    return LimelightHelpers.getTargetPose_CameraSpace("");
-  }
-
-  
-  public double getTagID(){
-    return LimelightHelpers.getFiducialID("");
-  }
-  
-
-
-
-  public void setLEDSon(){
-    LimelightHelpers.setLEDMode_ForceOn(VisionConstants.kLimelightName);
-  }
-  public void setLEDSoff(){
-    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.kLimelightName);
+    // return 0;
   }
   
   public void CameraModeDriver(){

@@ -23,7 +23,7 @@ public class TeleOpDrive extends Command {
   private final SwerveSubsystem m_swerveSubsystem = RobotContainer.m_swerveSubsystem;
   private final Vision m_visionSubsystem = RobotContainer.m_visionSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, rotSpdFunction;
-  private final Supplier<Double> leftTriggerFunction, rightTriggerFunction;
+  private final Supplier<Boolean> slowSpdFunction;
   private final Supplier<Boolean> fieldRelativeFunction;
   private final Supplier<Boolean> alignFunction;
   private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
@@ -33,15 +33,14 @@ public class TeleOpDrive extends Command {
   /** Creates a new SwerveJoystickCommand */
   public TeleOpDrive( 
       Supplier<Double> xSpdFB, Supplier<Double> ySpdLR, Supplier<Double> rotSpd,
-      Supplier<Double> leftTriggerSlowTurn, Supplier<Double> rightTriggerSlowTurn,
+      Supplier<Boolean> slowSpeed,
       Supplier<Boolean> fieldRelative, Supplier<Boolean> alignRobot) {
     // Use addRequirements() here to declare subsystem dependencies.
     
     this.xSpdFunction = xSpdFB;
     this.ySpdFunction = ySpdLR;
     this.rotSpdFunction = rotSpd;
-    this.leftTriggerFunction = leftTriggerSlowTurn;
-    this.rightTriggerFunction = rightTriggerSlowTurn;
+    this.slowSpdFunction = slowSpeed;
     this.fieldRelativeFunction = fieldRelative;
     this.alignFunction = alignRobot;
 
@@ -61,11 +60,9 @@ public class TeleOpDrive extends Command {
   public void execute() {
     // Get the x, y, and rotation speeds from the joystick and apply the scale factor
     //TODO: Change x and y back and test because I'm stupid - Gavin
-    double ySpeed = xSpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
-    double xSpeed = ySpdFunction.get() * SwerveDriveConstants.kTeleopDriveSpeedScale;
-    double leftTriggerRot = leftTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
-    double rightTriggerRot = rightTriggerFunction.get() * SwerveDriveConstants.kTeleopDriveTriggerSpeedScale;
-    double rotSpeed = rotSpdFunction.get() * SwerveDriveConstants.kTeleopTurnSpeedScale + (rightTriggerRot - leftTriggerRot);
+    double ySpeed = (xSpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    double xSpeed = (ySpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    double rotSpeed = (rotSpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopTurnSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopTurnSpeedScale;
     // Calculate the rotation speed from the triggers and the joystick (will use 1 if you try to hyperdrive) 
 
     // Apply a deadband to the x, y, and rotation speeds
@@ -81,7 +78,7 @@ public class TeleOpDrive extends Command {
     // If the vision align button is pressed, use the vision subsystem to align the robot
     if (alignFunction.get() && m_visionSubsystem.getTV()) { //Checks for align button
       double error = m_visionSubsystem.getTX(); //maybe add or subtract the x speed to it for shooting on the move.
-      double alignSpeed = m_visionRotationPID.calculate(error, 0);
+      double alignSpeed = m_visionRotationPID.calculate(error, 0 - m_swerveSubsystem.getFieldRelativeChassisSpeeds().vyMetersPerSecond);
 
       double alignCommanded = Math.min((rotSpeed + alignSpeed), 1);
       rotSpeed = alignCommanded;

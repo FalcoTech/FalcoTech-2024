@@ -32,10 +32,11 @@ public class Tilt extends SubsystemBase {
     leftTiltMotor.setIdleMode(IdleMode.kBrake);
     rightTiltMotor.setIdleMode(IdleMode.kBrake);
 
-    leftTiltMotor.setInverted(false);
+    leftTiltMotor.setInverted(true);
     rightTiltMotor.follow(leftTiltMotor, true);
 
     SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
+    SmartDashboard.putBoolean("FAST TILT (HANG SPEED)", false);
   }
   
   public void moveTilt(double speed){
@@ -46,10 +47,18 @@ public class Tilt extends SubsystemBase {
   }
 
   public double getTiltAngle(){
-    return tiltEncoder.get();
+    return tiltEncoder.get() - .11;
   }
-  public void setTiltToSetpoint(double setpointDegrees){
-    leftTiltMotor.set(m_tiltPID.calculate(getTiltAngle(), setpointDegrees));
+  public void setTiltToSetpoint(double setpoint){
+    double pidOutput = m_tiltPID.calculate(getTiltAngle(), setpoint); 
+    double pidCommanded = 0;
+    if (pidOutput > 0){
+      pidCommanded = Math.min(pidOutput, .2);
+    } else if (pidOutput < 0){
+      pidCommanded = Math.max(pidOutput, -.2);
+    }
+    
+    leftTiltMotor.set(pidCommanded);
   }
 
   public void resetTiltEncoder(){

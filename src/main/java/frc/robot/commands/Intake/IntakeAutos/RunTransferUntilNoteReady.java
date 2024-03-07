@@ -2,51 +2,42 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Tilt;
+package frc.robot.commands.Intake.IntakeAutos;
 
-import java.util.function.Supplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Tilt;
+import frc.robot.subsystems.Intake;
 
+public class RunTransferUntilNoteReady extends Command {
+  private final Intake m_intakeSubsystem = RobotContainer.m_intakeSubsystem;
 
-public class ManualTilt extends Command {
-  private final Tilt m_tiltSubsystem = RobotContainer.m_tiltSubsystem;
-  private final Supplier<Double> tiltSpeed;
-
-  /** Creates a new ManualTilt. */
-  public ManualTilt(Supplier<Double> speed) {
-    this.tiltSpeed = speed;
+  /** Creates a new RunIntakeUntilTransferReady. */
+  public RunTransferUntilNoteReady() {
+    addRequirements(m_intakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_tiltSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SmartDashboard.getBoolean("FAST TILT (HANG SPEED)", false)){
-      m_tiltSubsystem.moveTilt(tiltSpeed.get() * .5);
-    } else {
-      m_tiltSubsystem.moveTilt(tiltSpeed.get() * .2);
-    }
-
+    m_intakeSubsystem.setTransferSpeed(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_tiltSubsystem.stopTilt();
+    m_intakeSubsystem.stopTransfer();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_intakeSubsystem.getNoteReady();
   }
 }

@@ -82,12 +82,15 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     new Thread(() -> { 
       try {
-        Thread.sleep(1000); // Wait for gyro to calibrate,
+        gyro.calibrate();
+        Thread.sleep(5000); // Wait for gyro to calibrate,
         zeroGyro();         // then zero it
       } catch (Exception e){
         System.out.println(e);
       }
     }).start();
+
+    brakeModules(); //brake modules on startup
 
     odometry.update(getGyroRotation2d(), getModulePositions()); //update initial odometry
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d()); //put robot on field widget
@@ -195,6 +198,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public Boolean isBrakeMode(){
     return frontLeftModule.isBrakeMode();
   }
+  public void switchIdleMode(){
+    if (isBrakeMode()){
+      coastModules();
+    } else {
+      brakeModules();
+    }
+  }
+
   public void stopModules(){
     frontLeftModule.stopMotors();
     frontRightModule.stopMotors();
@@ -242,5 +253,8 @@ public class SwerveSubsystem extends SubsystemBase {
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
 
     SmartDashboard.putBoolean("Idle Mode", !isBrakeMode());
+
+    SmartDashboard.putNumber("ChassisSpeeds X", getFieldRelativeChassisSpeeds().vxMetersPerSecond);
+    SmartDashboard.putNumber("ChassisSpeeds Y", getFieldRelativeChassisSpeeds().vyMetersPerSecond);
   }
 }

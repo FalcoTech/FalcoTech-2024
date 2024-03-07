@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.5,
-      "y": 1.0
+      "x": 0.71,
+      "y": 4.49
     },
-    "rotation": 0
+    "rotation": -60.60000000000002
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Tuning Path No Rotations"
+            "pathName": "Get note 3"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Lock Wheels"
+            "pathName": "go back from note 3"
           }
         }
       ]

@@ -10,6 +10,9 @@ import frc.robot.commands.Swerve.TeleOpDrive;
 import frc.robot.commands.Tilt.ManualTilt;
 import frc.robot.commands.Tilt.SetTiltAngleDegrees;
 import frc.robot.commands.Intake.RunIntake;
+import frc.robot.commands.Intake.IntakeAutos.RunIntakeUntilTransferReady;
+import frc.robot.commands.Intake.IntakeAutos.RunTransferUntilNoteReady;
+import frc.robot.commands.Intake.IntakeAutos.TransferNoteThroughShooter;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.commands.Swerve.LockWheels;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -72,32 +75,35 @@ public class RobotContainer {
       () -> -Pilot.getLeftX(),
       () -> -Pilot.getLeftY(),
       () -> -Pilot.getRightX(),
-      () -> 0.0, //Pilot.getRightTriggerAxis()
-      () -> 0.0, //Pilot.getLeftTriggerAxis()
+      () -> Pilot.getLeftBumper(), //Slow Speed
       () -> !Pilot.getRightBumper(), //Field Relative
       () -> Pilot.getXButton())); //Vision Align
 
     new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
-    new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.brakeModules())); //XBOX CONTROLLER
-    new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.coastModules())); //XBOX CONTROLLER
-    // new Trigger(() -> Pilot.getOptionsButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //PS4 CONTROLLER
+    // new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.brakeModules())); //XBOX CONTROLLER
+    // new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.coastModules())); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.switchIdleMode())); //XBOX CONTROLLER
 
+    
     new Trigger(() -> Pilot.getYButton()).whileTrue(new LockWheels()); //XBOX
     // new Trigger(() -> Pilot.getTriangleButton()).whileTrue(new SwerveLockWheels()); //PS4
   }
 
+
+
   private void configureCoPilotBindings(){
     m_intakeSubsystem.setDefaultCommand(new RunIntake((() -> (CoPilot.getRightTriggerAxis() - CoPilot.getLeftTriggerAxis()))));
-    new Trigger(() -> CoPilot.getXButton()).whileTrue(new RunIntake(() -> 1.0));
+
+    m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> -CoPilot.getRightY()));
+    new Trigger(() -> CoPilot.getYButton()).onTrue(new SetTiltAngleDegrees(.15)); //Shoot to somwthing
+    new Trigger(() -> CoPilot.getXButton()).onTrue(new SetTiltAngleDegrees(.30)); //Shoot to somwthing
+    new Trigger(() -> CoPilot.getPOV() == 180).onTrue(new SetTiltAngleDegrees(0)); //Shoot to somwthing
 
 
-    m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> CoPilot.getRightY()));
-    new Trigger(() -> CoPilot.getYButton()).whileTrue(new SetTiltAngleDegrees(.3)); //Shoot to Speaker
 
 
-
-    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(ShooterConstants.kShooterSpeakerSpeed)); //Shoot to Speaker
-    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(ShooterConstants.kShooterAmpSpeed)); //Place to Amp
+    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(.6)); //Shoot to Speaker
+    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(.35)); //Place to Amp
 
     //Multiple commands can be bound to the same button using command groups
   }
@@ -108,10 +114,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lock Wheels", new LockWheels());
 
     //INTAKE
+    NamedCommands.registerCommand("Intake Until Transfer Ready", new RunIntakeUntilTransferReady());
+    NamedCommands.registerCommand("Transfer Until Note Ready", new RunTransferUntilNoteReady());
+    NamedCommands.registerCommand("Transfer Note Through Shooter", new TransferNoteThroughShooter());
 
     //SHOOTER
     NamedCommands.registerCommand("Shoot Speaker", new RunShooter(ShooterConstants.kShooterSpeakerSpeed));
     NamedCommands.registerCommand("Shoot Amp", new RunShooter(ShooterConstants.kShooterAmpSpeed));
+    NamedCommands.registerCommand("Shooter Off", new RunShooter(0));
 
     //TILT
   }
