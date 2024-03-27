@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
@@ -26,6 +27,7 @@ public class Tilt extends SubsystemBase {
 
   private final PIDController m_tiltPID = new PIDController(TiltConstants.kLiftPID_P, TiltConstants.kLiftPID_I, TiltConstants.kLiftPID_D);
 
+  private final InterpolatingDoubleTreeMap tiltMap = new InterpolatingDoubleTreeMap();
 
   /** Creates a new Tilt. */
   public Tilt() {
@@ -37,6 +39,18 @@ public class Tilt extends SubsystemBase {
 
     SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
     SmartDashboard.putBoolean("FAST TILT (HANG SPEED)", false);
+
+    tiltMap.put(1.44, .04);
+    tiltMap.put(1.6, .04);
+    tiltMap.put(1.8, .05);
+    tiltMap.put(2.0, .06);
+    tiltMap.put(2.2, .07);
+    tiltMap.put(2.4, .07);
+    tiltMap.put(2.6, .07);
+
+    tiltMap.put(2.8, .07); //maybe
+    tiltMap.put(3.0, .06); //def not lol
+    System.out.println("Tilt map 0: " + tiltMap.get(1.7));
   }
   
   public void moveTilt(double speed){
@@ -47,7 +61,8 @@ public class Tilt extends SubsystemBase {
   }
 
   public double getTiltAngle(){
-    return tiltEncoder.get() - .11;
+    return tiltEncoder.getDistance();
+    // return tiltEncoder.get();
   }
   public void setTiltToSetpoint(double setpoint){
     double pidOutput = m_tiltPID.calculate(getTiltAngle(), setpoint); 
@@ -59,6 +74,9 @@ public class Tilt extends SubsystemBase {
     }
     
     leftTiltMotor.set(pidCommanded);
+  }
+  public double findTiltMapAngle(double distance){
+    return tiltMap.get(distance);
   }
 
   public void resetTiltEncoder(){

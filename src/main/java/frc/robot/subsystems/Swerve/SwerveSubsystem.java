@@ -23,8 +23,10 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.ADIS16448_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveChassisConstants;
 import frc.robot.Constants.SwerveDriveConstants;
@@ -95,6 +97,9 @@ public class SwerveSubsystem extends SubsystemBase {
     odometry.update(getGyroRotation2d(), getModulePositions()); //update initial odometry
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d()); //put robot on field widget
     SmartDashboard.putData("Field", field); //send field to smartdashboard
+    SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> zeroGyro()).ignoringDisable(true));
+    SmartDashboard.putData("Calibrate Gyro", new InstantCommand(() -> calibrateGyro()).ignoringDisable(true));
+
 
     SmartDashboard.putData("Swerve Drive", new Sendable() {
       @Override
@@ -124,10 +129,10 @@ public class SwerveSubsystem extends SubsystemBase {
       this::getChassisSpeeds, //robot chassisspeeds supplier
       this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer (command to drive robot) 
       new HolonomicPathFollowerConfig(
-        new PIDConstants(3, 0.0, 0.0), // robot translation PID
-        new PIDConstants(3, 0.0, 0.0), // robot rotation PID
+        new PIDConstants(2.5, 0.0, 0.0), // robot translation PID
+        new PIDConstants(.3, 0.0, 0.0), // robot rotation PID
         SwerveDriveConstants.kMaxSpeedMetersPerSecond, //max swerve module speed (m/s)
-        Math.hypot(SwerveDriveConstants.kTrackWidth/2, SwerveDriveConstants.kWheelBase/2), //drivebase radius
+        .59, //drivebase radius
         new ReplanningConfig() 
       ), 
       () -> {
@@ -142,17 +147,21 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getGyroHeading(){
-    return Math.IEEEremainder(-gyro.getAngle(), 360);
-  }  
+    return Math.IEEEremainder(-gyro.getGyroAngleZ(), 360);
+  }
   public Rotation2d getGyroRotation2d(){
     return Rotation2d.fromDegrees(getGyroHeading());
   }
   public void zeroGyro(){
     gyro.reset();
   }
+  public void calibrateGyro(){
+    gyro.calibrate();
+  }
+
 
   public Pose2d getPose2d(){
-    return new Pose2d(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());
+    return odometry.getPoseMeters();
   }
   public void resetPose(Pose2d pose){
     odometry.resetPosition(

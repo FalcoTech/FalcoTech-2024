@@ -23,8 +23,8 @@ public class Intake extends SubsystemBase {
 
   private final VictorSPX transferMotor;
 
-  private final LaserCan lowerLaserCan;
-  private final LaserCan upperLaserCan;
+  // private final LaserCan lowerLaserCan;
+  // private final LaserCan upperLaserCan;
   
   /** Creates a new Intake. */
   public Intake() {
@@ -41,8 +41,9 @@ public class Intake extends SubsystemBase {
     transferMotor.setNeutralMode(NeutralMode.Coast);
     transferMotor.setInverted(true);
 
-    lowerLaserCan = new LaserCan(IntakeConstants.kLowerLaserCanID);
-    upperLaserCan = new LaserCan(IntakeConstants.kUpperLaserCanID);
+    // lowerLaserCan = new LaserCan(IntakeConstants.kLowerLaserCanID);
+    // upperLaserCan = new LaserCan(IntakeConstants.kUpperLaserCanID);
+    SmartDashboard.putBoolean("LASERCAN CHECKS", true);
   }
 
   public void setIntakeSpeed(double speed){
@@ -59,20 +60,20 @@ public class Intake extends SubsystemBase {
     transferMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public boolean getTransferReady(){
-    if (lowerLaserCan.getMeasurement() != null){
-        return lowerLaserCan.getMeasurement().distance_mm < 229; 
-    } else {
-      return false;
-    }
-  }
-  public boolean getNoteReady(){
-    if (upperLaserCan.getMeasurement() != null){
-      return upperLaserCan.getMeasurement().distance_mm < 229;
-    } else {
-      return false;
-    }
-  }
+  // public boolean getTransferReady(){
+  //   if (lowerLaserCan.getMeasurement() != null){
+  //       return lowerLaserCan.getMeasurement().distance_mm < 229; 
+  //   } else {
+  //     return false;
+  //   }
+  // }
+  // public boolean getNoteReady(){
+  //   if (upperLaserCan.getMeasurement() != null){
+  //     return upperLaserCan.getMeasurement().distance_mm < 229;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   @Override
   public void periodic() {
@@ -82,7 +83,7 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Lower Intake Power Consumption", frontIntakeMotor.getMotorOutputVoltage());
     SmartDashboard.putNumber("Transfer Motor Power Consumption", transferMotor.getMotorOutputVoltage());
 
-    SmartDashboard.putBoolean("Transfer Ready", getTransferReady());
-    SmartDashboard.putBoolean("Note Ready", getNoteReady());
+    // SmartDashboard.putBoolean("Transfer Ready", getTransferReady());
+    // SmartDashboard.putBoolean("Note Ready", getNoteReady());
   }
 }

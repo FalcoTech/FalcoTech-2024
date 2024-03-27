@@ -60,9 +60,9 @@ public class TeleOpDrive extends Command {
   public void execute() {
     // Get the x, y, and rotation speeds from the joystick and apply the scale factor
     //TODO: Change x and y back and test because I'm stupid - Gavin
-    double ySpeed = (xSpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
-    double xSpeed = (ySpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
-    double rotSpeed = (rotSpdFunction.get() * (slowSpdFunction.get() ? SwerveDriveConstants.kTeleopTurnSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopTurnSpeedScale;
+    double ySpeed = (xSpdFunction.get() * (slowSpdFunction.get() || alignFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    double xSpeed = (ySpdFunction.get() * (slowSpdFunction.get() || alignFunction.get() ? SwerveDriveConstants.kTeleopDriveSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopDriveSpeedScale;
+    double rotSpeed = (rotSpdFunction.get() * (slowSpdFunction.get() || alignFunction.get() ? SwerveDriveConstants.kTeleopTurnSlowSpeedScale : 1)) * SwerveDriveConstants.kTeleopTurnSpeedScale;
     // Calculate the rotation speed from the triggers and the joystick (will use 1 if you try to hyperdrive) 
 
     // Apply a deadband to the x, y, and rotation speeds
@@ -78,7 +78,7 @@ public class TeleOpDrive extends Command {
     // If the vision align button is pressed, use the vision subsystem to align the robot
     if (alignFunction.get() && m_visionSubsystem.getTV()) { //Checks for align button
       double error = m_visionSubsystem.getTX(); //maybe add or subtract the x speed to it for shooting on the move.
-      double alignSpeed = m_visionRotationPID.calculate(error, 0 - m_swerveSubsystem.getFieldRelativeChassisSpeeds().vyMetersPerSecond);
+      double alignSpeed = m_visionRotationPID.calculate(error, 0);
 
       double alignCommanded = Math.min((rotSpeed + alignSpeed), 1);
       rotSpeed = alignCommanded;

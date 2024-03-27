@@ -1,0 +1,107 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.2607893308067006,
+        "y": 7.021971382008425
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.459527036179183,
+        "y": 7.072960800757449
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.8112329977987371,
+        "y": 6.606771829337803
+      },
+      "prevControl": {
+        "x": 1.3939692120732952,
+        "y": 6.912708341831947
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "stop int",
+      "waypointRelativePos": 0.15,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Stop Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "unjam",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Unjam Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "spin up and tilt",
+      "waypointRelativePos": 0.75,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Up Speaker"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Tilt To Speaker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 10.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 60.6,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Close subwoofer",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

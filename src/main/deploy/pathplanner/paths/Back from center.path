@@ -1,0 +1,119 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.534552069991451,
+        "y": 0.9250937401608607
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9455043825793066,
+        "y": 2.520334126737464
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7893803897634414,
+        "y": 4.428795228486641
+      },
+      "prevControl": {
+        "x": 1.972381683351359,
+        "y": 3.348766354754261
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 4.88,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "stop intake",
+      "waypointRelativePos": 0.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Stop Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "unjam",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Unjam Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "spin and tilt",
+      "waypointRelativePos": 0.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Tilt To Speaker"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Up Speaker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.88,
+    "maxAcceleration": 4.88,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -60.25999999999999,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "2 Note Grab Open Center Line",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

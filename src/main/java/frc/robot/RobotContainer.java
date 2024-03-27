@@ -9,11 +9,16 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Swerve.TeleOpDrive;
 import frc.robot.commands.Tilt.ManualTilt;
 import frc.robot.commands.Tilt.SetTiltAngleDegrees;
+import frc.robot.commands.Tilt.TiltAimToSpeaker;
 import frc.robot.commands.Intake.RunIntake;
-import frc.robot.commands.Intake.IntakeAutos.RunIntakeUntilTransferReady;
-import frc.robot.commands.Intake.IntakeAutos.RunTransferUntilNoteReady;
-import frc.robot.commands.Intake.IntakeAutos.TransferNoteThroughShooter;
+import frc.robot.commands.Intake.IntakeAutos.RunBothIntakes;
+import frc.robot.commands.Intake.IntakeAutos.RunIntakeForTime;
+import frc.robot.commands.Intake.IntakeAutos.StopBothIntakes;
 import frc.robot.commands.Shooter.RunShooter;
+import frc.robot.commands.Shooter.ShooterAutos.RunShooterForTime;
+import frc.robot.commands.Shooter.ShooterAutos.RunShooterWithSpeed;
+import frc.robot.commands.Shooter.ShooterAutos.SpinUpShooter;
+import frc.robot.commands.Shooter.ShooterAutos.StopShooter;
 import frc.robot.commands.Swerve.LockWheels;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.*;
@@ -82,7 +87,7 @@ public class RobotContainer {
     new Trigger(() -> Pilot.getStartButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.zeroGyro())); //XBOX CONTROLLER
     // new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.brakeModules())); //XBOX CONTROLLER
     // new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.coastModules())); //XBOX CONTROLLER
-    new Trigger(() -> Pilot.getBButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.switchIdleMode())); //XBOX CONTROLLER
+    new Trigger(() -> Pilot.getAButton()).onTrue(new InstantCommand(() -> m_swerveSubsystem.switchIdleMode())); //XBOX CONTROLLER
 
     
     new Trigger(() -> Pilot.getYButton()).whileTrue(new LockWheels()); //XBOX
@@ -94,16 +99,20 @@ public class RobotContainer {
   private void configureCoPilotBindings(){
     m_intakeSubsystem.setDefaultCommand(new RunIntake((() -> (CoPilot.getRightTriggerAxis() - CoPilot.getLeftTriggerAxis()))));
 
-    m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> -CoPilot.getRightY()));
-    new Trigger(() -> CoPilot.getYButton()).onTrue(new SetTiltAngleDegrees(.15)); //Shoot to somwthing
-    new Trigger(() -> CoPilot.getXButton()).onTrue(new SetTiltAngleDegrees(.30)); //Shoot to somwthing
-    new Trigger(() -> CoPilot.getPOV() == 180).onTrue(new SetTiltAngleDegrees(0)); //Shoot to somwthing
+    m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> (-CoPilot.getRightY() - CoPilot.getLeftY()) < 0 ? Math.min((-CoPilot.getRightY() - CoPilot.getLeftY()), 1) : Math.max((-CoPilot.getRightY() - CoPilot.getLeftY()), -1)));
+    // new Trigger(() -> CoPilot.getYButton()).onTrue(new SetTiltAngleDegrees(.04)); //Shoot to speaker
+    new Trigger(() -> CoPilot.getYButton()).onTrue(new TiltAimToSpeaker()); //Auto Aim Tilt
+    new Trigger(() -> CoPilot.getXButton()).onTrue(new SetTiltAngleDegrees(.30)); //Shoot to amp
+    new Trigger(() -> CoPilot.getPOV() == 180).onTrue(new SetTiltAngleDegrees(0)); //tilt to intake
+
+    new Trigger(() -> CoPilot.getStartButton()).whileTrue(new ManualTilt(() -> -.5)); 
 
 
 
 
-    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(.6)); //Shoot to Speaker
-    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(.35)); //Place to Amp
+
+    new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(.7)); 
+    new Trigger(() -> CoPilot.getAButton()).whileTrue(new RunShooter(.35)); 
 
     //Multiple commands can be bound to the same button using command groups
   }
@@ -114,16 +123,24 @@ public class RobotContainer {
     NamedCommands.registerCommand("Lock Wheels", new LockWheels());
 
     //INTAKE
-    NamedCommands.registerCommand("Intake Until Transfer Ready", new RunIntakeUntilTransferReady());
-    NamedCommands.registerCommand("Transfer Until Note Ready", new RunTransferUntilNoteReady());
-    NamedCommands.registerCommand("Transfer Note Through Shooter", new TransferNoteThroughShooter());
+    NamedCommands.registerCommand("Start Intake", new RunBothIntakes(1));
+    NamedCommands.registerCommand("Stop Intake", new StopBothIntakes());
+    NamedCommands.registerCommand("Reverse Intake", new RunBothIntakes(-.75));
+
+    NamedCommands.registerCommand("Intake For 1.5s", new RunIntakeForTime(1, 2.5));
+    NamedCommands.registerCommand("Intake For 3s", new RunIntakeForTime(1, 3));
+    NamedCommands.registerCommand("Unjam Note", new RunIntakeForTime(-.9, .15));
 
     //SHOOTER
-    NamedCommands.registerCommand("Shoot Speaker", new RunShooter(ShooterConstants.kShooterSpeakerSpeed));
-    NamedCommands.registerCommand("Shoot Amp", new RunShooter(ShooterConstants.kShooterAmpSpeed));
-    NamedCommands.registerCommand("Shooter Off", new RunShooter(0));
+    NamedCommands.registerCommand("Shoot Speaker", new RunShooterWithSpeed(.35));
+    NamedCommands.registerCommand("Stop Shooter", new StopShooter());
+
+    NamedCommands.registerCommand("Spin Up Speaker", new SpinUpShooter(.35));
+    NamedCommands.registerCommand("Shoot For 5s", new RunShooterForTime(.35, 5));
 
     //TILT
+    NamedCommands.registerCommand("Tilt To Intake", new SetTiltAngleDegrees(0));
+    NamedCommands.registerCommand("Tilt To Speaker", new SetTiltAngleDegrees(.05));
   }
 
   private void configureSmartDashboard(){
@@ -134,4 +151,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected(); //return the selected auto command
   }
+  
 }

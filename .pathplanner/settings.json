@@ -1,13 +1,16 @@
 {
-  "robotWidth": 0.66,
-  "robotLength": 0.66,
+  "robotWidth": 0.84,
+  "robotLength": 0.84,
   "holonomicMode": true,
   "pathFolders": [
-    "2 Note",
-    "Far right center"
+    "2 Note Grab Open Center Line",
+    "2 Note Open Side",
+    "Close subwoofer",
+    "center sub",
+    "heheheha"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 3.0,
+  "defaultMaxVel": 10.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

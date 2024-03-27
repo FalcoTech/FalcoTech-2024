@@ -47,10 +47,10 @@ public final class Constants {
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 1;
 
-    public static final double kTeleopDriveSpeedScale = .5;
-    public static final double kTeleopTurnSpeedScale = .3;
-    public static final double kTeleopDriveSlowSpeedScale = .45;
-    public static final double kTeleopTurnSlowSpeedScale = .45;
+    public static final double kTeleopDriveSpeedScale = .825;
+    public static final double kTeleopTurnSpeedScale = .375;
+    public static final double kTeleopDriveSlowSpeedScale = .385;
+    public static final double kTeleopTurnSlowSpeedScale = .385;
 
     //distance between centers of right and left wheels on robot (track width)
     public static final double kTrackWidth = Units.inchesToMeters(20.75);
@@ -118,7 +118,7 @@ public final class Constants {
     
     public static final int kTiltZeroOffset = 0;
 
-    public static final double kLiftPID_P = 5;
+    public static final double kLiftPID_P = 7;
     public static final double kLiftPID_I = 0;
     public static final double kLiftPID_D = 0;
   }
@@ -127,7 +127,7 @@ public final class Constants {
     public static final int kLeftShootMotorID = 40; //CAN
     public static final int kRightShootMotorID = 41; //CAN
 
-    public static final double kShooterSpeakerSpeed = 1.0;
+    public static final double kShooterSpeakerSpeed = .6;
     public static final double kShooterAmpSpeed = .35;
   }
 

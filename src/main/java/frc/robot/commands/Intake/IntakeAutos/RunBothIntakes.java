@@ -9,38 +9,42 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake;
 
-public class TransferNoteThroughShooter extends Command {
-  public final Intake m_intakeSubsystem = RobotContainer.m_intakeSubsystem;
-
-  public final Timer shootTimer = new Timer();
-  /** Creates a new TransferNoteThroughShooter. */
-  public TransferNoteThroughShooter() {
+public class RunBothIntakes extends Command {
+  private final Intake m_intakeSubsystem = RobotContainer.m_intakeSubsystem;
+  private double intakeSpeed;
+  private Timer intakeTimer = new Timer();
+  /** Will run both the front intake and the transfer motor with a specified speed. POSITIVE speed will SUCK note, NEGATIVE speed will SPIT */
+  public RunBothIntakes(double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.intakeSpeed = speed;
     addRequirements(m_intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shootTimer.start();
+    intakeTimer.reset();
+    intakeTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.setTransferSpeed(1);
+    m_intakeSubsystem.setIntakeSpeed(intakeSpeed);
+    m_intakeSubsystem.setTransferSpeed(intakeSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shootTimer.stop();
-    shootTimer.reset();
+    m_intakeSubsystem.stopIntake();
+    m_intakeSubsystem.stopTransfer();
+    intakeTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_intakeSubsystem.getNoteReady();
+    return intakeTimer.get() > 5;
   }
 }

@@ -19,7 +19,7 @@ public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
   public Vision() {
     //Start USB Camera on RoboRIO
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
   }
 
   public double getTX(){
@@ -36,8 +36,11 @@ public class Vision extends SubsystemBase {
   }
 
   public double getDistanceToTarget(){
-    return LimelightHelpers.getTargetPose_CameraSpace("")[2];
-    // return 0;
+    if (getTV()){
+        return LimelightHelpers.getTargetPose_CameraSpace("")[2];
+    } else {
+      return 0;
+    }
   }
   
   public void CameraModeDriver(){

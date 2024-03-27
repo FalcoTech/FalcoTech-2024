@@ -6,6 +6,7 @@ package frc.robot.commands.Intake;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake;
@@ -15,6 +16,7 @@ public class RunIntake extends Command {
   private final Intake m_intakeSubsystem = RobotContainer.m_intakeSubsystem;
   private final Shooter m_shooterSubsystem = RobotContainer.m_shooterSubsystem;
   private Supplier<Double> intakeSpeed;
+  private boolean transferStage = false;
   /** Command to run intake motors based on copilot input. NEGATIVE speed will SUCK notes*/
   public RunIntake(Supplier<Double> speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,22 +32,27 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
+    // if (SmartDashboard.getBoolean("LASERCAN CHECKS", true) && intakeSpeed.get() > 0){
+    //   if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady() && !transferStage){
+    //     m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
+    //   } else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
+    //     transferStage = true;
+    //     m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get() * .2);
+    //     m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
+    //   } else if (!m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady() && transferStage){
+    //     m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
+    //   } else if (!m_intakeSubsystem.getTransferReady() && m_intakeSubsystem.getNoteReady()){
+    //     transferStage = false;
+    //     m_intakeSubsystem.stopIntake();
+    //     if (m_shooterSubsystem.getShooterSpeed() > 1000){
+    //       m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
+    //     }
+    //   }
+    // } else {
     //   m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
-    //   m_intakeSubsystem.stopTransfer();
-    // } 
-    // else if (m_intakeSubsystem.getTransferReady() && !m_intakeSubsystem.getNoteReady()){
-    //   m_intakeSubsystem.stopIntake();
     //   m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    // } 
-    // else if (m_intakeSubsystem.getNoteReady() && m_shooterSubsystem.getShooterSpeed() > 1){
-    //   m_intakeSubsystem.stopIntake();
-    //   m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
-    // } 
-    // else if (m_intakeSubsystem.getNoteReady()){
-    //   m_intakeSubsystem.stopIntake();
-    //   m_intakeSubsystem.stopTransfer();
     // }
+
     m_intakeSubsystem.setIntakeSpeed(intakeSpeed.get());
     m_intakeSubsystem.setTransferSpeed(intakeSpeed.get());
   }
