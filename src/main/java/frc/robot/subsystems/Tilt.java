@@ -61,7 +61,7 @@ public class Tilt extends SubsystemBase {
   }
 
   public double getTiltAngle(){
-    return tiltEncoder.getDistance();
+    return tiltEncoder.getDistance()+.01;
     // return tiltEncoder.get();
   }
   public void setTiltToSetpoint(double setpoint){

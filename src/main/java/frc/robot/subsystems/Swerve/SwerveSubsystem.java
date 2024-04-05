@@ -129,11 +129,12 @@ public class SwerveSubsystem extends SubsystemBase {
       this::getChassisSpeeds, //robot chassisspeeds supplier
       this::swerveDriveChassisSpeedsConsumer, //chassisspeeds consumer (command to drive robot) 
       new HolonomicPathFollowerConfig(
-        new PIDConstants(2.5, 0.0, 0.0), // robot translation PID
+        new PIDConstants(1.7, 0.0, 0.0), // robot translation PID
         new PIDConstants(.3, 0.0, 0.0), // robot rotation PID
         SwerveDriveConstants.kMaxSpeedMetersPerSecond, //max swerve module speed (m/s)
         .59, //drivebase radius
         new ReplanningConfig() 
+        
       ), 
       () -> {
         //mirror auto path for red side

@@ -48,7 +48,7 @@ public final class Constants {
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 1;
 
     public static final double kTeleopDriveSpeedScale = .825;
-    public static final double kTeleopTurnSpeedScale = .375;
+    public static final double kTeleopTurnSpeedScale = .340;
     public static final double kTeleopDriveSlowSpeedScale = .385;
     public static final double kTeleopTurnSlowSpeedScale = .385;
 
@@ -118,7 +118,7 @@ public final class Constants {
     
     public static final int kTiltZeroOffset = 0;
 
-    public static final double kLiftPID_P = 7;
+    public static final double kLiftPID_P = 12.5;
     public static final double kLiftPID_I = 0;
     public static final double kLiftPID_D = 0;
   }

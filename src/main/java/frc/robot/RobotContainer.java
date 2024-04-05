@@ -101,7 +101,7 @@ public class RobotContainer {
 
     m_tiltSubsystem.setDefaultCommand(new ManualTilt(() -> (-CoPilot.getRightY() - CoPilot.getLeftY()) < 0 ? Math.min((-CoPilot.getRightY() - CoPilot.getLeftY()), 1) : Math.max((-CoPilot.getRightY() - CoPilot.getLeftY()), -1)));
     // new Trigger(() -> CoPilot.getYButton()).onTrue(new SetTiltAngleDegrees(.04)); //Shoot to speaker
-    new Trigger(() -> CoPilot.getYButton()).onTrue(new TiltAimToSpeaker()); //Auto Aim Tilt
+    new Trigger(() -> CoPilot.getYButton()).whileTrue(new TiltAimToSpeaker()); //Auto Aim Tilt
     new Trigger(() -> CoPilot.getXButton()).onTrue(new SetTiltAngleDegrees(.30)); //Shoot to amp
     new Trigger(() -> CoPilot.getPOV() == 180).onTrue(new SetTiltAngleDegrees(0)); //tilt to intake
 
