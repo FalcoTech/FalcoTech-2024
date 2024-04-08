@@ -68,9 +68,9 @@ public class Tilt extends SubsystemBase {
     double pidOutput = m_tiltPID.calculate(getTiltAngle(), setpoint); 
     double pidCommanded = 0;
     if (pidOutput > 0){
-      pidCommanded = Math.min(pidOutput, .2);
+      pidCommanded = Math.min(pidOutput, .3);
     } else if (pidOutput < 0){
-      pidCommanded = Math.max(pidOutput, -.2);
+      pidCommanded = Math.max(pidOutput, -.22);
     }
     
     leftTiltMotor.set(pidCommanded);

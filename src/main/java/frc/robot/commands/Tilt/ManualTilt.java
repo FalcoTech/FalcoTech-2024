@@ -37,7 +37,7 @@ public class ManualTilt extends Command {
         m_tiltSubsystem.moveTilt(tiltSpeed.get() * .15);
       }
     } else {
-      m_tiltSubsystem.moveTilt(tiltSpeed.get() * .2);
+      m_tiltSubsystem.moveTilt(tiltSpeed.get() * .3);
     }
 
   }

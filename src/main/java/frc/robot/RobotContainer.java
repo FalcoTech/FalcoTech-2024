@@ -127,7 +127,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake", new StopBothIntakes());
     NamedCommands.registerCommand("Reverse Intake", new RunBothIntakes(-.75));
 
-    NamedCommands.registerCommand("Intake For 1.5s", new RunIntakeForTime(1, 2.5));
+    NamedCommands.registerCommand("Intake For 1.5s", new RunIntakeForTime(1, 1.5));
     NamedCommands.registerCommand("Intake For 3s", new RunIntakeForTime(1, 3));
     NamedCommands.registerCommand("Unjam Note", new RunIntakeForTime(-.9, .15));
 

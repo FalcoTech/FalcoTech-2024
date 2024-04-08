@@ -41,14 +41,15 @@ public final class Constants {
   }
 
   public static class SwerveDriveConstants {
+
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(16);
     public static final double kMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
     public static final double kTeleopDriveMaxAccelerationUnitsPerSecond = 5;
     public static final double kTeleopDriveMaxAngularAccelerationUnitsPerSecond = 1;
 
-    public static final double kTeleopDriveSpeedScale = .825;
-    public static final double kTeleopTurnSpeedScale = .340;
+    public static final double kTeleopDriveSpeedScale = .890;
+    public static final double kTeleopTurnSpeedScale = .550;
     public static final double kTeleopDriveSlowSpeedScale = .385;
     public static final double kTeleopTurnSlowSpeedScale = .385;
 
@@ -72,7 +73,7 @@ public final class Constants {
     public static final boolean kFrontLeftDriveMotorReversed = true;
     public static final boolean kFrontLeftTurnMotorReversed = true;
     public static final int kFrontLeftAbsoluteEncoderID = 0;
-    public static final double kFrontLeftAbsoluteEncoderOffsetRadians = 0.960271973216411; 
+    public static final double kFrontLeftAbsoluteEncoderOffsetRadians = -2.115359506494299; 
     public static final boolean kFrontLeftAbsoluteEncoderReversed = false;
 
     public static final int kFrontRightDriveMotorID = 12;
@@ -80,7 +81,7 @@ public final class Constants {
     public static final boolean kFrontRightDriveMotorReversed = false;
     public static final boolean kFrontRightTurnMotorReversed = true;
     public static final int kFrontRightAbsoluteEncoderID = 1;
-    public static final double kFrontRightAbsoluteEncoderOffsetRadians = -0.719436989518366; 
+    public static final double kFrontRightAbsoluteEncoderOffsetRadians = -0.7019436989518366; 
     public static final boolean kFrontRightAbsoluteEncoderReversed = false;
 
     public static final int kBackLeftDriveMotorID = 14;
