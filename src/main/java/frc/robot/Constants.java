@@ -70,7 +70,7 @@ public final class Constants {
   public static class DriveChassisConstants {
     public static final int kFrontLeftDriveMotorID = 10;
     public static final int kFrontLeftTurnMotorID = 11;
-    public static final boolean kFrontLeftDriveMotorReversed = true;
+    public static final boolean kFrontLeftDriveMotorReversed = false;
     public static final boolean kFrontLeftTurnMotorReversed = true;
     public static final int kFrontLeftAbsoluteEncoderID = 0;
     public static final double kFrontLeftAbsoluteEncoderOffsetRadians = -2.115359506494299; 

@@ -48,9 +48,8 @@ public class Tilt extends SubsystemBase {
     tiltMap.put(2.4, .07);
     tiltMap.put(2.6, .07);
 
-    tiltMap.put(2.8, .07); //maybe
-    tiltMap.put(3.0, .06); //def not lol
-    System.out.println("Tilt map 0: " + tiltMap.get(1.7));
+    tiltMap.put(2.8, .08); //maybe
+    tiltMap.put(3.0, .08); //def not lol
   }
   
   public void moveTilt(double speed){
@@ -61,7 +60,7 @@ public class Tilt extends SubsystemBase {
   }
 
   public double getTiltAngle(){
-    return tiltEncoder.getDistance()+.01;
+    return tiltEncoder.getDistance();
     // return tiltEncoder.get();
   }
   public void setTiltToSetpoint(double setpoint){
