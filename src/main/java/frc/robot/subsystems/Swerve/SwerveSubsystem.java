@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems.Swerve;
 
+import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Mat;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -72,7 +74,8 @@ public class SwerveSubsystem extends SubsystemBase {
     DriveChassisConstants.kBackRightAbsoluteEncoderOffsetRadians,
     DriveChassisConstants.kBackRightAbsoluteEncoderReversed);
   
-    private final ADIS16448_IMU gyro = new ADIS16448_IMU();    
+    // private final ADIS16448_IMU gyro = new ADIS16448_IMU();
+    private final Pigeon2 pidgy = new Pigeon2(4);
     private final Field2d field = new Field2d();
     private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(
       SwerveDriveConstants.kDriveKinematics, 
@@ -84,7 +87,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     new Thread(() -> { 
       try {
-        gyro.calibrate();
+        // gyro.calibrate();
+    
         Thread.sleep(5000); // Wait for gyro to calibrate,
         zeroGyro();         // then zero it
       } catch (Exception e){
@@ -148,16 +152,20 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getGyroHeading(){
-    return Math.IEEEremainder(-gyro.getGyroAngleZ(), 360);
+    // return Math.IEEEremainder(-gyro.getGyroAngleZ(), 360);
+    return Math.IEEEremainder(-pidgy.getAngle(), 360);
+
   }
   public Rotation2d getGyroRotation2d(){
     return Rotation2d.fromDegrees(getGyroHeading());
   }
   public void zeroGyro(){
-    gyro.reset();
+    // gyro.reset();
+    pidgy.reset();
   }
   public void calibrateGyro(){
-    gyro.calibrate();
+    // gyro.calibrate();
+    // pidgy.setControl(new Calib3d());
   }
 
 
@@ -256,8 +264,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Robot Heading:", getGyroHeading());
-    SmartDashboard.putData("Gyro", gyro);
-    SmartDashboard.putBoolean("Gyro Connected", gyro.isConnected());
+    // SmartDashboard.putData("Gyro", gyro);
+    SmartDashboard.putData("Gyro", pidgy);
+    // SmartDashboard.putBoolean("Gyro Connected", gyro.isConnected());
 
     odometry.update(getGyroRotation2d(), getModulePositions());
     field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), getGyroRotation2d());

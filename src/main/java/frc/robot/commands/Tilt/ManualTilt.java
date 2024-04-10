@@ -30,14 +30,18 @@ public class ManualTilt extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SmartDashboard.getBoolean("FAST TILT (HANG SPEED)", false)){
+    if (m_tiltSubsystem.HANGSPEED){
       if (tiltSpeed.get() < 0){
         m_tiltSubsystem.moveTilt(tiltSpeed.get() * .65);
       } else if (tiltSpeed.get() > 0){
         m_tiltSubsystem.moveTilt(tiltSpeed.get() * .15);
       }
     } else {
-      m_tiltSubsystem.moveTilt(tiltSpeed.get() * .3);
+      if (tiltSpeed.get() < 0){
+        m_tiltSubsystem.moveTilt(tiltSpeed.get() * .3);
+      } else if (tiltSpeed.get() > 0){
+        m_tiltSubsystem.moveTilt(tiltSpeed.get() * .4);
+      }
     }
 
   }

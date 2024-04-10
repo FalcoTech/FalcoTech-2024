@@ -29,6 +29,8 @@ public class Tilt extends SubsystemBase {
 
   private final InterpolatingDoubleTreeMap tiltMap = new InterpolatingDoubleTreeMap();
 
+  public boolean HANGSPEED = false;
+
   /** Creates a new Tilt. */
   public Tilt() {
     leftTiltMotor.setIdleMode(IdleMode.kBrake);
@@ -38,7 +40,7 @@ public class Tilt extends SubsystemBase {
     rightTiltMotor.follow(leftTiltMotor, true);
 
     SmartDashboard.putData("Reset Tilt Encoder", new InstantCommand(() -> resetTiltEncoder()).ignoringDisable(true));
-    SmartDashboard.putBoolean("FAST TILT (HANG SPEED)", false);
+    // SmartDashboard.putBoolean("FAST TILT (HANG SPEED)", false);
 
     tiltMap.put(1.44, .04);
     tiltMap.put(1.6, .04);
@@ -82,6 +84,14 @@ public class Tilt extends SubsystemBase {
     tiltEncoder.reset();
   } 
 
+  public void toggleHangSpeed(){
+    if (HANGSPEED == true){
+      HANGSPEED = false;
+    } else {
+      HANGSPEED = true;
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -93,6 +103,5 @@ public class Tilt extends SubsystemBase {
     SmartDashboard.putNumber("RT Output %", rightTiltMotor.getAppliedOutput());
     SmartDashboard.putNumber("LT Amp Draw ", leftTiltMotor.getOutputCurrent());
     SmartDashboard.putNumber("RT Amp Draw ", rightTiltMotor.getOutputCurrent());
-
   }
 }

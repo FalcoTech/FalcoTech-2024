@@ -105,10 +105,10 @@ public class RobotContainer {
     new Trigger(() -> CoPilot.getXButton()).onTrue(new SetTiltAngleDegrees(.30)); //Shoot to amp
     new Trigger(() -> CoPilot.getPOV() == 180).onTrue(new SetTiltAngleDegrees(0)); //tilt to intake
 
+    new Trigger(() -> CoPilot.getPOV() == 0).onTrue(new InstantCommand(() -> m_tiltSubsystem.toggleHangSpeed())); //toggle fast tilt speed for hanging the robot at the endgame of a match which is the last 20 seconds signified by the guitar riff at the end of the match when it is quote unquote: "time to hang"
+    
+
     new Trigger(() -> CoPilot.getStartButton()).whileTrue(new ManualTilt(() -> -.5)); 
-
-
-
 
 
     new Trigger(() -> CoPilot.getBButton()).whileTrue(new RunShooter(.7)); 
