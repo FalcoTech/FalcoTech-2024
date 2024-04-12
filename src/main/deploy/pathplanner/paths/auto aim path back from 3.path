@@ -1,0 +1,116 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.384620776340044,
+        "y": 4.086437702600339
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.1271618999598214,
+        "y": 4.147741046571565
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7144741299243023,
+        "y": 4.2466901615258426
+      },
+      "prevControl": {
+        "x": 2.1708671160304136,
+        "y": 4.133172641214701
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "stop int",
+      "waypointRelativePos": 0.05,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Stop Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "unjam",
+      "waypointRelativePos": 0.15,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Unjam Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "spinup and tilt",
+      "waypointRelativePos": 0.8,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Up Auto Aim"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Auto Aim Tilt"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -38.63698551669027,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "3 note auto aim source",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

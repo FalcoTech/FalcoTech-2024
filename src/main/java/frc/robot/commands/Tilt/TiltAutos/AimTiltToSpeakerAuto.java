@@ -13,7 +13,7 @@ public class AimTiltToSpeakerAuto extends Command {
   private final Tilt m_tiltSubsystem = RobotContainer.m_tiltSubsystem;
   private final Vision m_visionSubsystem = RobotContainer.m_visionSubsystem;
 
-  private double setpointFiltered;
+  private double tiltMapAngle;
   /** Creates a new TiltAimToSpeaker. */
   public AimTiltToSpeakerAuto() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,9 +29,9 @@ public class AimTiltToSpeakerAuto extends Command {
   public void execute() {
     if (m_visionSubsystem.getTV()){
       double distanceToSpeaker = m_visionSubsystem.getDistanceToTarget();
-      this.setpointFiltered = (.05 + ((distanceToSpeaker - 1.1)*.01));
+      this.tiltMapAngle = m_tiltSubsystem.findTiltMapAngle(distanceToSpeaker);
 
-      m_tiltSubsystem.setTiltToSetpoint(Math.min(setpointFiltered, .15));
+      m_tiltSubsystem.setTiltToSetpoint(tiltMapAngle);
     }
   }
 
@@ -44,6 +44,7 @@ public class AimTiltToSpeakerAuto extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_tiltSubsystem.getTiltAngle() >= (setpointFiltered - .01) && m_tiltSubsystem.getTiltAngle() <= (setpointFiltered + .01);
+    return m_tiltSubsystem.getTiltAngle() == tiltMapAngle; //If this doesn't work, uncomment the line below and comment this one out (put // in front of "return" on this line and remove the // from the line below)
+    // return (m_tiltSubsystem.getTiltAngle() > tiltMapAngle - .01) && (m_tiltSubsystem.getTiltAngle() < tiltMapAngle + .01);
   }
 }

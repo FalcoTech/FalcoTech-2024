@@ -10,6 +10,7 @@ import frc.robot.commands.Swerve.TeleOpDrive;
 import frc.robot.commands.Tilt.ManualTilt;
 import frc.robot.commands.Tilt.SetTiltAngleDegrees;
 import frc.robot.commands.Tilt.TiltAimToSpeaker;
+import frc.robot.commands.Tilt.TiltAutos.AimTiltToSpeakerAuto;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.Intake.IntakeAutos.RunBothIntakes;
 import frc.robot.commands.Intake.IntakeAutos.RunIntakeForTime;
@@ -137,10 +138,12 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Spin Up Speaker", new SpinUpShooter(.35));
     NamedCommands.registerCommand("Shoot For 5s", new RunShooterForTime(.35, 5));
+    NamedCommands.registerCommand("Spin Up Auto Aim", new SpinUpShooter(.7));
 
     //TILT
     NamedCommands.registerCommand("Tilt To Intake", new SetTiltAngleDegrees(0));
     NamedCommands.registerCommand("Tilt To Speaker", new SetTiltAngleDegrees(.05));
+    NamedCommands.registerCommand("Auto Aim Tilt", new AimTiltToSpeakerAuto());
   }
 
   private void configureSmartDashboard(){

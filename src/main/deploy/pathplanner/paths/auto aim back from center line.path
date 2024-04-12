@@ -1,0 +1,119 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.2723207735679,
+        "y": 0.7866938892706536
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.703061461136232,
+        "y": 1.2455986580118685
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.71,
+        "y": 4.25
+      },
+      "prevControl": {
+        "x": 1.8091687647439179,
+        "y": 2.775281220482583
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.95,
+        "maxAcceleration": 1.95,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "stop intake",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Stop Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "unjam",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Unjam Note"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "spin and tilt",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Auto Aim Tilt"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Up Auto Aim"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.88,
+    "maxAcceleration": 4.88,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -38.639999999999986,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "3 note auto aim source",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}
